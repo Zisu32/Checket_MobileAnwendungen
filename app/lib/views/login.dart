@@ -1,3 +1,4 @@
+import 'package:app/views/camera.dart';
 import 'package:flutter/material.dart';
 import 'registration.dart'; // Ensure this is imported if using RegistrationPage navigation
 
@@ -49,7 +50,12 @@ class LoginPage extends StatelessWidget {
               ),
               const SizedBox(height: 25),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const CameraPage()),
+                  );
+                },
                 child: const Text('anmelden'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
