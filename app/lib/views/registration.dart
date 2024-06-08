@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login.dart';
 
 class RegistrationPage extends StatelessWidget {
   const RegistrationPage({super.key});
@@ -6,32 +7,90 @@ class RegistrationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850],  // Correct placement of the backgroundColor
+      backgroundColor: Colors.grey[850],
+      // Correct placement of the backgroundColor
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              const SizedBox(height: 50),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Benutzername'),
+                decoration: InputDecoration(
+                  labelText: 'Benutzername',
+                  fillColor: Colors.white,
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.person,
+                    size: 20,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(0.0),
+                  ),
+                ),
               ),
+              const SizedBox(height: 25),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Passwort'),
-                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Passwort',
+                  fillColor: Colors.white,
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    size: 20,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(0.0),
+                  ),
+                ),
+                obscureText: true, // Correctly placed
               ),
+              const SizedBox(height: 25),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Passwort wiederholen'),
-                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'Passwort wiederholen',
+                  fillColor: Colors.white,
+                  filled: true,
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    size: 20,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(0.0),
+                  ),
+                ),
+                obscureText: true, // Correctly placed
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 25),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                },
                 child: const Text('registrieren'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
-                  backgroundColor: Colors.deepPurple,  // Changed from 'primary'
+                  backgroundColor: Colors.deepPurple,
+                  foregroundColor: Colors.white, // text color
                 ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.deepPurple,
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                'assets/img/logo-white.png',
+                height: 40,
               ),
             ],
           ),
