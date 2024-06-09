@@ -98,7 +98,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   width: 250,
                   height: 400,
                   child: Text(
-                    result != null ? '${result!.code}' : '',
+                    result != null ? '${result!.code}' : '', //show QR-Scanned Number
                     style: const TextStyle(
                       color: Colors.cyanAccent,
                       fontWeight: FontWeight.bold,
