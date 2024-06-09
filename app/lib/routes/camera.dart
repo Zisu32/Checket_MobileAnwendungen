@@ -57,16 +57,18 @@ class _CameraPageState extends State<CameraPage> {
         children: <Widget>[
           if (isCameraReady && controller != null)
             Expanded(
+              flex: 8,
               child: CameraPreview(controller!),
             ),
           Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.all(25.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
+                ElevatedButton.icon(
                   onPressed: takePicture,
-                  child: const Icon(Icons.camera),
+                  icon: const Icon(Icons.camera),
+                  label: const Text('aufnehmen'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurple,
                     foregroundColor: Colors.white,
@@ -78,7 +80,7 @@ class _CameraPageState extends State<CameraPage> {
                     isFlashOn ? Icons.flashlight_on : Icons.flashlight_off,
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isFlashOn ? Colors.deepPurple : Colors.grey,
+                    backgroundColor: isFlashOn ? Colors.deepPurple : Colors.white12,
                     foregroundColor: Colors.white,
                   ),
                 ),
@@ -142,7 +144,7 @@ class _CameraPageState extends State<CameraPage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text('Close'),
+                    child: Text('schließen'),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.deepPurple, // Text color of the button
