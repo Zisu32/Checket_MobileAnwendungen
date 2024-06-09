@@ -34,9 +34,13 @@ dependencies:
   camera: ^0.11.0+1  # Check for the latest version on pub.dev
   path_provider: ^2.0.1
   path: ^1.8.0
+  image_picker: ^1.1.2  # upload image
+  shared_preferences: ^2.0.15
   qr_flutter: ^4.1.0 # display qr
   qr_code_scanner: ^1.0.0 # scanner qr
   cupertino_icons: ^1.0.6
+  permission_handler: ^11.3.1
+
 
 dev_dependencies:
   flutter_test:

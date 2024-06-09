@@ -4,7 +4,7 @@ import 'package:app/routes/footer_menu.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class ScannerPage extends StatefulWidget {
-  const ScannerPage({Key? key}) : super(key: key);
+  const ScannerPage({super.key});
 
   @override
   _ScannerPageState createState() => _ScannerPageState();
@@ -94,7 +94,7 @@ class _ScannerPageState extends State<ScannerPage> {
             return AlertDialog(
               backgroundColor: Colors.grey[850],
               title: Center(
-                child: Container(
+                child: SizedBox(
                   width: 250,
                   height: 400,
                   child: Text(
@@ -112,11 +112,11 @@ class _ScannerPageState extends State<ScannerPage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('schließen'),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.deepPurple,
                     ),
+                    child: const Text('schließen'),
                   ),
                 ),
               ],

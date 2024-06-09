@@ -20,7 +20,7 @@ class RegistrationPage extends StatelessWidget {
                   labelText: 'Benutzername',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: Icon(
+                  prefixIcon: const Icon(
                     Icons.person,
                     size: 20,
                   ),
@@ -35,7 +35,7 @@ class RegistrationPage extends StatelessWidget {
                   labelText: 'Passwort',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: Icon(
+                  prefixIcon: const Icon(
                     Icons.lock,
                     size: 20,
                   ),
@@ -51,7 +51,7 @@ class RegistrationPage extends StatelessWidget {
                   labelText: 'Passwort wiederholen',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: Icon(
+                  prefixIcon: const Icon(
                     Icons.lock,
                     size: 20,
                   ),
@@ -66,12 +66,12 @@ class RegistrationPage extends StatelessWidget {
                 onPressed: () {
                   Navigator.popAndPushNamed(context, "/login");
                 },
-                child: const Text('registrieren'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
                   backgroundColor: Colors.deepPurple,
                   foregroundColor: Colors.white, // text color
                 ),
+                child: const Text('registrieren'),
               ),
             ],
           ),

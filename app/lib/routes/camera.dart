@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:app/routes/footer_menu.dart';
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({Key? key}) : super(key: key);
+  const CameraPage({super.key});
 
   @override
   _CameraPageState createState() => _CameraPageState();
@@ -76,12 +75,12 @@ class _CameraPageState extends State<CameraPage> {
                 ),
                 ElevatedButton(
                   onPressed: toggleFlash,
-                  child: Icon(
-                    isFlashOn ? Icons.flashlight_on : Icons.flashlight_off,
-                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isFlashOn ? Colors.deepPurple : Colors.white12,
                     foregroundColor: Colors.white,
+                  ),
+                  child: Icon(
+                    isFlashOn ? Icons.flashlight_on : Icons.flashlight_off,
                   ),
                 ),
               ],
@@ -112,14 +111,14 @@ class _CameraPageState extends State<CameraPage> {
                 children: [
                   Text(
                     '$pictureCounter',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.cyanAccent,
                       fontSize: 100,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Container(
+                  const SizedBox(height: 20),
+                  const SizedBox(
                     width: 250,
                     height: 250,
                     /*child: QrImage(
@@ -144,11 +143,11 @@ class _CameraPageState extends State<CameraPage> {
                 Center(
                   child: ElevatedButton(
                     onPressed: () => Navigator.of(context).pop(),
-                    child: Text('schließen'),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.deepPurple, // Text color of the button
                     ),
+                    child: const Text('schließen'),
                   ),
                 ),
               ],
