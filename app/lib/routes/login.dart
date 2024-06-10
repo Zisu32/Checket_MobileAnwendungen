@@ -31,23 +31,9 @@ class LoginPage extends StatelessWidget {
         if (snapshot.hasData && snapshot.data != null) {
           fileExists = File(snapshot.data!).existsSync();
         }
-
-        Widget imageWidget = Container(
-          height: 250,
-          width: double.infinity,
-          child: fileExists
-              ? Image.file(
-            File(snapshot.data!),
-            fit: BoxFit.cover,
-          )
-              : const Placeholder(
-            fallbackHeight: 250,
-            fallbackWidth: double.infinity,
-          ),
-        );
         // Check for data and if the file exists
         Widget imageWidget = SizedBox(
-            height: 100,
+            height: 250,
             child: snapshot.hasData && File(snapshot.data!).existsSync()
                 ? Image.file(
                     File(
@@ -56,7 +42,7 @@ class LoginPage extends StatelessWidget {
                     fit: BoxFit.cover,
                   ) // Use BoxFit.cover to make it look better
                 : const Placeholder(
-                    fallbackHeight: 100, fallbackWidth: double.infinity));
+                    fallbackHeight: 250, fallbackWidth: double.infinity));
 
         return Scaffold(
           backgroundColor: Colors.grey[850],
