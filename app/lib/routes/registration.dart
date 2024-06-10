@@ -1,75 +1,101 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class RegistrationPage extends StatelessWidget {
-  const RegistrationPage({super.key});
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({Key? key}) : super(key: key);
+
+  @override
+  _RegistrationPageState createState() => _RegistrationPageState();
+}
+
+class _RegistrationPageState extends State<RegistrationPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _repeatPasswordController =
+      TextEditingController();
+
+  Future<void> registerUser(BuildContext context) async {
+    if (_passwordController.text != _repeatPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(child: Text('Passwörter nicht identisch')),
+        backgroundColor: Colors.redAccent,
+      ));
+      return;
+    }
+
+    var url = Uri.parse('http://10.0.2.2:3000/registration');
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': _usernameController.text,
+        'password': _passwordController.text,
+        'imagePath': '', // no image path is provided during registration
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.popAndPushNamed(context, "/login");
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(child: Text('Registrierung fehlgeschlagen')),
+        backgroundColor: Colors.redAccent,
+      ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[850],
-      // Correct placement of the backgroundColor
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const SizedBox(height: 50),
               TextFormField(
-                decoration: InputDecoration(
+                controller: _usernameController,
+                decoration: const InputDecoration(
                   labelText: 'Benutzername',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: const Icon(
-                    Icons.person,
-                    size: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                  ),
+                  prefixIcon: Icon(Icons.person, size: 20),
+                  border: OutlineInputBorder(),
                 ),
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: 25),
               TextFormField(
-                decoration: InputDecoration(
+                controller: _passwordController,
+                decoration: const InputDecoration(
                   labelText: 'Passwort',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: const Icon(
-                    Icons.lock,
-                    size: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                  ),
+                  prefixIcon: Icon(Icons.lock, size: 20),
+                  border: OutlineInputBorder(),
                 ),
-                obscureText: true, // Correctly placed
+                obscureText: true,
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: 25),
               TextFormField(
-                decoration: InputDecoration(
+                controller: _repeatPasswordController,
+                decoration: const InputDecoration(
                   labelText: 'Passwort wiederholen',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: const Icon(
-                    Icons.lock,
-                    size: 20,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                  ),
+                  prefixIcon: Icon(Icons.lock, size: 20),
+                  border: OutlineInputBorder(),
                 ),
-                obscureText: true, // Correctly placed
+                obscureText: true,
               ),
-              const SizedBox(height: 25),
+              SizedBox(height: 25),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.popAndPushNamed(context, "/login");
-                },
+                onPressed: () => registerUser(context),
                 style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
+                  minimumSize: Size.fromHeight(50),
                   backgroundColor: Colors.deepPurple,
-                  foregroundColor: Colors.white, // text color
+                  foregroundColor: Colors.white,
                 ),
                 child: const Text('registrieren'),
               ),

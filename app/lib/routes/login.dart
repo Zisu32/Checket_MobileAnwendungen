@@ -1,13 +1,46 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   Future<String?> getSavedImagePath() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('imagePath');
+  }
+
+  Future<void> loginUser(BuildContext context) async {
+    var url =
+        Uri.parse('http://10.0.2.2:3000/login'); // Adjust URL for your backend
+    var response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'username': _usernameController.text,
+        'password': _passwordController.text
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      Navigator.popAndPushNamed(context, "/camera");
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Center(
+            child: Text('${response.statusCode} : Logindaten prüfen')),
+        backgroundColor: Colors.redAccent,
+      ));
+    }
   }
 
   @override
@@ -15,6 +48,7 @@ class LoginPage extends StatelessWidget {
     return FutureBuilder<String?>(
       future: getSavedImagePath(),
       builder: (context, snapshot) {
+        // Existing build implementation with minor adjustments to use _usernameController and _passwordController
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
@@ -44,10 +78,9 @@ class LoginPage extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: Colors.grey[850],
-          resizeToAvoidBottomInset: true, // Enable resizing of the body
+          resizeToAvoidBottomInset: true,
           body: SafeArea(
             child: SingleChildScrollView(
-              // Wrap the column in a SingleChildScrollView
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
@@ -56,6 +89,7 @@ class LoginPage extends StatelessWidget {
                     imageWidget,
                     const SizedBox(height: 50),
                     TextFormField(
+                      controller: _usernameController,
                       decoration: InputDecoration(
                         labelText: 'Benutzername',
                         fillColor: Colors.white,
@@ -71,6 +105,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 25),
                     TextFormField(
+                      controller: _passwordController,
                       decoration: InputDecoration(
                         labelText: 'Passwort',
                         fillColor: Colors.white,
@@ -87,9 +122,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 25),
                     ElevatedButton(
-                      onPressed: () async {
-                        Navigator.popAndPushNamed(context, "/camera");
-                      },
+                      onPressed: () => loginUser(context),
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(50),
                         backgroundColor: Colors.deepPurple,

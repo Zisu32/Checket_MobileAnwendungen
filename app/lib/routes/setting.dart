@@ -71,9 +71,11 @@ class SettingPageState extends State<SettingPage> {
       }
       isPickerActive = false; // Reset flag when picker ends
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Storage permission denied')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(
+            child: Text('Keine Berechtigung')),
+        backgroundColor: Colors.redAccent,
+      ));
     }
   }
 
@@ -82,16 +84,20 @@ class SettingPageState extends State<SettingPage> {
     if (pickedFile != null && pickedFile.path.isNotEmpty) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('imagePath', pickedFile.path);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Image saved successfully!')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(
+            child: Text('Bild hochgeladen')),
+        backgroundColor: Colors.teal,
+      ));
       setState(() {
         imagePath = pickedFile.path;
       });
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('No image selected')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(
+            child: Text('Kein Bild ausgewählt')),
+        backgroundColor: Colors.redAccent,
+      ));
     }
   }
 
