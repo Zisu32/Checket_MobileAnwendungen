@@ -3,7 +3,6 @@ import 'package:camera/camera.dart';
 import 'dart:async';
 import 'package:app/routes/footer_menu.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:torch_light/torch_light.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -120,12 +119,12 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                   SizedBox(
+                  SizedBox(
                     width: 250,
                     height: 250,
                     child: QrImageView(
                       data: 'Number: $pictureCounter , '
-                            'Path: ${file.path}',
+                          'Path: ${file.path}',
                       version: QrVersions.auto,
                       backgroundColor: Colors.white,
                       size: 200.0,
@@ -163,14 +162,22 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
-  void toggleFlash() {
-    if (!isFlashOn) {
-      controller?.setFlashMode(FlashMode.torch);
-    } else {
-      controller?.setFlashMode(FlashMode.off);
+  void toggleFlash() async {
+    if (controller == null || !controller!.value.isInitialized) {
+      print('Error: camera not initialized.');
+      return;
     }
-    setState(() {
-      isFlashOn = !isFlashOn;
-    });
+    try {
+      if (!isFlashOn) {
+        await controller!.setFlashMode(FlashMode.torch);
+      } else {
+        await controller!.setFlashMode(FlashMode.off);
+      }
+      setState(() {
+        isFlashOn = !isFlashOn;
+      });
+    } catch (e) {
+      print('Failed to toggle flash: $e');
+    }
   }
 }

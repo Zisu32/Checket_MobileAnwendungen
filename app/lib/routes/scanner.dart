@@ -51,15 +51,7 @@ class _ScannerPageState extends State<ScannerPage> {
             flex: 1,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  result != null ? '${result!.code}' : '',
-                  style: const TextStyle(
-                    color: Colors.cyanAccent,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 36,
-                  ),
-                ),
+              children: <Widget>[
                 ElevatedButton.icon(
                   onPressed: () {
                     controller?.resumeCamera(); // Resume the camera
