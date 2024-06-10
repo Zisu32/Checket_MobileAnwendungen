@@ -50,7 +50,7 @@ class _ScannerPageState extends State<ScannerPage> {
           Expanded(
             flex: 1,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ElevatedButton.icon(
                   onPressed: () {

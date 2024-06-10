@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/routes/footer_menu.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
-//test
+
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
@@ -88,21 +88,22 @@ class _SettingPageState extends State<SettingPage> {
                   fit: BoxFit.cover, // Cover the area without distortion
                 ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: () => pickImage(context),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
                   backgroundColor: Colors.deepPurple,
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Upload Profilbild'),
+                icon: const Icon(Icons.upload),
+                label: const Text('Profilbild'),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               TextButton(
                 onPressed: () {
                   Navigator.popAndPushNamed(context, "/login");
                 },
-                child: const Text('Abmelden'),
+                child: const Text('abmelden'),
               ),
             ],
           ),
