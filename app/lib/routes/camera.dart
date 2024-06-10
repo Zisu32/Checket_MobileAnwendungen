@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
 import 'package:app/routes/footer_menu.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -118,16 +119,17 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const SizedBox(
+                   SizedBox(
                     width: 250,
                     height: 250,
-                    /*child: QrImage(
+                    child: QrImageView(
                       data: 'Picture #: $pictureCounter, Path: ${file.path}',
                       version: QrVersions.auto,
+                      backgroundColor: Colors.white,
                       size: 200.0,
                       gapless: false,
                       errorStateBuilder: (cxt, err) {
-                        return Center(
+                        return const Center(
                           child: Text(
                             "Error generating QR code",
                             textAlign: TextAlign.center,
@@ -135,7 +137,7 @@ class _CameraPageState extends State<CameraPage> {
                           ),
                         );
                       },
-                    ),*/
+                    ),
                   ),
                 ],
               ),
