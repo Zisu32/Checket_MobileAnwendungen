@@ -5,8 +5,8 @@
         android:required="false" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Permissions for reading and write from external storage -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
 
     <application
         android:label="app"
