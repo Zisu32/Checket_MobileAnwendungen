@@ -31,13 +31,13 @@ dependencies:
   flutter:
     sdk: flutter
 
-  camera: ^0.11.0+1  # Check for the latest version on pub.dev
+  camera: ^0.11.0+1
   path_provider: ^2.0.1
   path: ^1.8.0
-  image_picker: ^1.1.2  # upload image
+  image_picker: ^1.1.2
   shared_preferences: ^2.0.15
-  qr_flutter: ^4.1.0 # display qr
-  qr_code_scanner: ^1.0.0 # scanner qr
+  qr_flutter: ^4.1.0
+  qr_code_scanner: ^1.0.0
   cupertino_icons: ^1.0.6
   permission_handler: ^11.3.1
   torch_light: ^1.0.0
