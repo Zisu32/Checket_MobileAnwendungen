@@ -16,9 +16,17 @@ class LoginPage extends StatelessWidget {
       future: getSavedImagePath(),
       builder: (context, snapshot) {
         // Check for data and if the file exists
-        Widget imageWidget = snapshot.hasData && File(snapshot.data!).existsSync()
-            ? Image.file(File(snapshot.data!), fit: BoxFit.cover) // Use BoxFit.cover to make it look better
-            : const Placeholder(fallbackHeight: 100, fallbackWidth: double.infinity);
+        Widget imageWidget = Container(
+            height: 100,
+            child: snapshot.hasData && File(snapshot.data!).existsSync()
+                ? Image.file(
+                    File(
+                      snapshot.data!,
+                    ),
+                    fit: BoxFit.cover,
+                  ) // Use BoxFit.cover to make it look better
+                : const Placeholder(
+                    fallbackHeight: 100, fallbackWidth: double.infinity));
 
         return Scaffold(
           backgroundColor: Colors.grey[850],
@@ -28,7 +36,7 @@ class LoginPage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  imageWidget,  // Show the image if available, or a placeholder if not
+                  imageWidget, // Show the image if available, or a placeholder if not
                   const SizedBox(height: 50),
                   TextFormField(
                     decoration: InputDecoration(
@@ -63,7 +71,7 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 25),
                   ElevatedButton(
                     onPressed: () async {
-                      bool loginSuccessful = true;   // Simulated login success
+                      bool loginSuccessful = true; // Simulated login success
 
                       if (loginSuccessful) {
                         Navigator.popAndPushNamed(context, "/camera");

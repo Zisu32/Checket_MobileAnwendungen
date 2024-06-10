@@ -33,18 +33,22 @@ class _SettingPageState extends State<SettingPage> {
 
   Future<void> pickImage(BuildContext context) async {
     // Check and request storage permission
-    var status = await Permission.storage.status;
+    await Permission.photos.request();
+    var status = await Permission.photos.status;
+
+    debugPrint('Storage permission status: $status');
     if (!status.isGranted) {
-      await Permission.storage.request();
+      await Permission.photos.request();
     }
 
-    if (await Permission.storage.isGranted) {
+    if (await Permission.photos.isGranted) {
       final ImagePicker picker = ImagePicker();
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
       if (image != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('imagePath', image.path);
+        debugPrint('Image saved to shared preferences ${image.path}');
 
         setState(() {
           imagePath = image.path;
