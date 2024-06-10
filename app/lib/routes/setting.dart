@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/routes/footer_menu.dart';
-import 'package:permission_handler/permission_handler.dart'; // Import for handling permissions
-import 'dart:io'; // Import for using File class
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
+
+//Um diese Seite gehts Janik
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
