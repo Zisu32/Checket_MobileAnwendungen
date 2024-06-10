@@ -42,8 +42,6 @@ dependencies:
   permission_handler: ^11.3.1
   torch_light: ^1.0.0
   image_picker_platform_interface: ^2.10.0
-  image_picker_android: ^0.8.12+3
-
 
 dev_dependencies:
   flutter_test:

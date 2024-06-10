@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:app/routes/footer_menu.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:image_picker_android/image_picker_android.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'dart:io';
+import 'footer_menu.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -18,7 +16,7 @@ class SettingPage extends StatefulWidget {
 class SettingPageState extends State<SettingPage> {
   String? imagePath;
   ImagePickerPlatform imagePickerImplementation = ImagePickerPlatform.instance;
-  bool isPickerActive = false; // Add this flag to track if picker is active
+  bool isPickerActive = false; // Flag to track if picker is active
 
   @override
   void initState() {
@@ -38,137 +36,63 @@ class SettingPageState extends State<SettingPage> {
 
   Future<int> showOptions() async {
     debugPrint('Showing options');
-    int selection = 0;
-    showCupertinoModalPopup(
+    return await showCupertinoModalPopup(
       context: context,
       builder: (context) => CupertinoActionSheet(
         actions: [
           CupertinoActionSheetAction(
             child: const Text('Photo Gallery'),
-            onPressed: () async {
-              // close the options modal
-              Navigator.of(context).pop();
-              // get image from gallery
-              selection = await getImageFromGallery();
-            },
+            onPressed: () => Navigator.of(context).pop(1),
           ),
           CupertinoActionSheetAction(
-            child: const Text('Camera'),
-            onPressed: () async {
-              // close the options modal
-              Navigator.of(context).pop();
-              // get image from camera
-              selection = await getImageFromCamera();
-            },
+            child: const Text('Kamera'),
+            onPressed: () => Navigator.of(context).pop(2),
           ),
         ],
+        cancelButton: CupertinoActionSheetAction(
+          child: const Text('Schließen'),
+          onPressed: () => Navigator.of(context).pop(0),
+        ),
       ),
     );
-    return selection;
-  }
-
-  Future<int> getImageFromGallery() async {
-    final pickedFile = await imagePickerImplementation.getImageFromSource(
-        source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      if (pickedFile.path != "") {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('imagePath', pickedFile.path);
-        // debugPrint('Image saved to shared preferences $imagePath');
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Image saved successfully!')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No image selected')),
-        );
-      }
-      setState(() {
-        imagePath = pickedFile.path;
-        debugPrint('Image path: $imagePath');
-      });
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('No image selected')));
-    }
-    return 1;
-  }
-
-//Image Picker function to get image from camera
-  Future<int> getImageFromCamera() async {
-    debugPrint('Getting image from camera');
-    final pickedFile = await imagePickerImplementation.getImageFromSource(
-        source: ImageSource.camera);
-
-    if (pickedFile != null) {
-      if (pickedFile.path != "") {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('imagePath', pickedFile.path);
-        // debugPrint('Image saved to shared preferences $imagePath');
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Image saved successfully!')),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No image selected')),
-        );
-      }
-      setState(() {
-        imagePath = pickedFile.path;
-        debugPrint('Image path: $imagePath');
-      });
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('No image selected')));
-    }
-    return 2;
   }
 
   Future<void> pickImage(BuildContext context) async {
-    debugPrint('Pick image');
-    // Check and request storage permission
-    await Permission.photos.request();
     var status = await Permission.photos.status;
-
-    debugPrint('Storage permission status: $status');
     if (!status.isGranted) {
-      await Permission.photos.request();
+      status = await Permission.photos.request();
     }
-    if (!isPickerActive) {
-      if (imagePickerImplementation is ImagePickerAndroid) {
-        (imagePickerImplementation as ImagePickerAndroid)
-            .useAndroidPhotoPicker = true;
+    if (status.isGranted && !isPickerActive) {
+      isPickerActive = true; // Set flag when picker starts
+      int source = await showOptions();
+      debugPrint('User selected: $source');
+      if (source != 0) { // 0 is Cancel, 1 is Gallery, 2 is Camera
+        await pickImageFromSource(source == 1 ? ImageSource.gallery : ImageSource.camera);
       }
+      isPickerActive = false; // Reset flag when picker ends
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Storage permission denied')),
+      );
     }
-    int x = await showOptions();
-    debugPrint('User selected: $x');
+  }
 
-    // if (await Permission.photos.isGranted) {
-    //   final ImagePicker picker = ImagePicker();
-
-    //   final XFile? image =
-    //       await picker.pickImage(source: ImageSource.values[1]);
-
-    // if (imagePath != "" && imagePath != null) {
-    //   SharedPreferences prefs = await SharedPreferences.getInstance();
-    //   await prefs.setString('imagePath', imagePath!);
-    //   // debugPrint('Image saved to shared preferences $imagePath');
-
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Image saved successfully!')),
-    //   );
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('No image selected')),
-    //   );
-    // }
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text('Storage permission denied')),
-    //   );
+  Future<void> pickImageFromSource(ImageSource source) async {
+    final pickedFile = await imagePickerImplementation.getImage(source: source);
+    if (pickedFile != null && pickedFile.path.isNotEmpty) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('imagePath', pickedFile.path);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Image saved successfully!')),
+      );
+      setState(() {
+        imagePath = pickedFile.path;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No image selected')),
+      );
+    }
   }
 
   @override
@@ -186,8 +110,8 @@ class SettingPageState extends State<SettingPage> {
                 Image.file(
                   File(imagePath!),
                   width: double.infinity,
-                  height: 300, // Fixed height for image
-                  fit: BoxFit.cover, // Cover the area without distortion
+                  height: 300,
+                  fit: BoxFit.cover,
                 ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
