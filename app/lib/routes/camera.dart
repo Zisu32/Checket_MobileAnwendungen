@@ -3,6 +3,7 @@ import 'package:camera/camera.dart';
 import 'dart:async';
 import 'package:app/routes/footer_menu.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:torch_light/torch_light.dart';
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -123,7 +124,8 @@ class _CameraPageState extends State<CameraPage> {
                     width: 250,
                     height: 250,
                     child: QrImageView(
-                      data: 'Picture #: $pictureCounter, Path: ${file.path}',
+                      data: 'Number: $pictureCounter , '
+                            'Path: ${file.path}',
                       version: QrVersions.auto,
                       backgroundColor: Colors.white,
                       size: 200.0,
