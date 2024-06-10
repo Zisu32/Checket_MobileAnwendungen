@@ -5,8 +5,6 @@ import 'package:app/routes/footer_menu.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
-//Um diese Seite gehts Janik
-
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 

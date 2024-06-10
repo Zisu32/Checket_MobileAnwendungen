@@ -93,6 +93,21 @@ class LoginPage extends StatelessWidget {
               ),
             ),
           ),
+          bottomNavigationBar: BottomAppBar(
+            color: Colors.deepPurple,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/img/logo-white.png',
+                    height: 40,
+                  ),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );
