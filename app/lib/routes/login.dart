@@ -31,79 +31,80 @@ class LoginPage extends StatelessWidget {
         if (snapshot.hasData && snapshot.data != null) {
           fileExists = File(snapshot.data!).existsSync();
         }
-        // Check for data and if the file exists
+
         Widget imageWidget = SizedBox(
             height: 250,
-            child: snapshot.hasData && File(snapshot.data!).existsSync()
+            child: snapshot.hasData && fileExists
                 ? Image.file(
-                    File(
-                      snapshot.data!,
-                    ),
+                    File(snapshot.data!),
                     fit: BoxFit.cover,
-                  ) // Use BoxFit.cover to make it look better
+                  )
                 : const Placeholder(
                     fallbackHeight: 250, fallbackWidth: double.infinity));
 
         return Scaffold(
           backgroundColor: Colors.grey[850],
+          resizeToAvoidBottomInset: true, // Enable resizing of the body
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  imageWidget, // Correct placement inside the Column
-                  const SizedBox(height: 50),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Benutzername',
-                      fillColor: Colors.white,
-                      filled: true,
-                      prefixIcon: const Icon(
-                        Icons.person,
-                        size: 20,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Passwort',
-                      fillColor: Colors.white,
-                      filled: true,
-                      prefixIcon: const Icon(
-                        Icons.lock,
-                        size: 20,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0.0),
+            child: SingleChildScrollView(
+              // Wrap the column in a SingleChildScrollView
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    imageWidget,
+                    const SizedBox(height: 50),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Benutzername',
+                        fillColor: Colors.white,
+                        filled: true,
+                        prefixIcon: const Icon(
+                          Icons.person,
+                          size: 20,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
                       ),
                     ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 25),
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Simplified login logic
-                      Navigator.popAndPushNamed(context, "/camera");
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                      backgroundColor: Colors.deepPurple,
-                      foregroundColor: Colors.white,
+                    const SizedBox(height: 25),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Passwort',
+                        fillColor: Colors.white,
+                        filled: true,
+                        prefixIcon: const Icon(
+                          Icons.lock,
+                          size: 20,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                      ),
+                      obscureText: true,
                     ),
-                    child: const Text('anmelden'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.popAndPushNamed(context, "/registration");
-                    },
-                    child: const Text('registrieren'),
-                  ),
-                ],
+                    const SizedBox(height: 25),
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.popAndPushNamed(context, "/camera");
+                      },
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        backgroundColor: Colors.deepPurple,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('anmelden'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.popAndPushNamed(context, "/registration");
+                      },
+                      child: const Text('registrieren'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
