@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app/routes/footer_menu.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
-
+//test
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
 
