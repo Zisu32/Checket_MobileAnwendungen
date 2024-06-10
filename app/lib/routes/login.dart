@@ -16,7 +16,7 @@ class LoginPage extends StatelessWidget {
       future: getSavedImagePath(),
       builder: (context, snapshot) {
         // Check for data and if the file exists
-        Widget imageWidget = Container(
+        Widget imageWidget = SizedBox(
             height: 100,
             child: snapshot.hasData && File(snapshot.data!).existsSync()
                 ? Image.file(
