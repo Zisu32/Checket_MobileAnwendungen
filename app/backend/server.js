@@ -21,26 +21,34 @@ app.post('/registration', async (req, res) => {
       },
     });
     res.json(newUser);
-  } catch (error) {
-    res.status(400).json({ error: "Could not create user." });
-  }
+} catch (error) {
+    console.error(error);
+    res.status(400).json({ error: error.message });
+}
 });
 
 // Login User
-app.post('/login', async (req, res) => {
-  const { username, password } = req.body; // Assume plaintext passwords for example
-  const user = await prisma.user.findUnique({
-    where: {
-      username: username,
-    },
-  });
+ app.post('/login', async (req, res) => {
+   const { username, password } = req.body;
 
-  if (user && user.password === password) {
-    res.json({ message: "Login successful", user });
-  } else {
-    res.status(401).json({ message: "Invalid credentials" });
-  }
-});
+   try {
+     const user = await prisma.user.findUnique({
+       where: {
+         username: username,
+       },
+     });
+
+     if (user && bcrypt.compareSync(password, user.password)) {
+       res.json({ message: "Login successful", user });
+     } else {
+       res.status(401).json({ message: "Invalid credentials" });
+     }
+   } catch (error) {
+     console.error(error);
+     res.status(500).json({ error: error.message });
+   }
+ });
+
 
 // Server running port
 const PORT = process.env.PORT || 3000;
