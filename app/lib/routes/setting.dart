@@ -4,8 +4,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'dart:io';
 import 'footer_menu.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -23,27 +21,6 @@ class SettingPageState extends State<SettingPage> {
   void initState() {
     super.initState();
     _loadSavedImage();
-  }
-
-  Future<void> saveImagePathToServer(String imagePath) async {
-    final uri = Uri.parse('http://10.0.2.2:3000/updateImagePath');
-    try {
-      final response = await http.post(
-        uri,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({'username': 'yourUsername', 'imagePath': imagePath}),
-      );
-
-      if (response.statusCode == 200) {
-        print('Image path updated successfully');
-      } else {
-        print('Failed to update image path');
-      }
-    } catch (e) {
-      print('Error sending image path: $e');
-    }
   }
 
   Future<void> _loadSavedImage() async {
@@ -116,7 +93,6 @@ class SettingPageState extends State<SettingPage> {
       ));
       setState(() {
         imagePath = pickedFile.path;
-        saveImagePathToServer(imagePath!);  // Save path to server
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
