@@ -7,29 +7,6 @@ const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 
-// Get User Image Path
-app.get('/imagePath/:username', async (req, res) => {
-  const { username } = req.params;
-  try {
-    const user = await prisma.user.findUnique({
-      where: {
-        username: username,
-      },
-      select: {
-        imagePath: true  // Only fetch imagePath
-      }
-    });
-
-    if (user) {
-      res.json({ imagePath: user.imagePath });
-    } else {
-      res.status(404).json({ message: "User not found" });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
 
 // Register User
 app.post('/registration', async (req, res) => {
@@ -72,24 +49,6 @@ app.post('/registration', async (req, res) => {
    }
  });
 
-// User Image Path
-app.post('/imagePath', async (req, res) => {
-  const { username, imagePath } = req.body;
-  try {
-    const user = await prisma.user.update({
-      where: {
-        username: username,
-      },
-      data: {
-        imagePath: imagePath,
-      },
-    });
-    res.json({ message: "Image path for user", user });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
 
 // Server running port
 const PORT = process.env.PORT || 3000;
