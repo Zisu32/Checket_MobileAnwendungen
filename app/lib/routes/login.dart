@@ -21,6 +21,16 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> loginUser(BuildContext context) async {
+    // Check if the username or password fields are empty
+    if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(child: Text('Benutzername und Passwort eintragen')),
+        backgroundColor: Colors.redAccent,
+      ));
+      return; // Exit the function early if any field is empty
+    }
+
+    // Proceed with login if both fields are filled
     var url =
         Uri.parse('http://10.0.2.2:3000/login'); // Adjust URL for your backend
     var response = await http.post(
@@ -35,9 +45,8 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
       Navigator.popAndPushNamed(context, "/camera");
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Center(
-            child: Text('${response.statusCode} : Logindaten prüfen')),
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(child: Text('Logindaten prüfen')),
         backgroundColor: Colors.redAccent,
       ));
     }
@@ -125,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () => loginUser(context),
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size.fromHeight(50),
-                        backgroundColor: Colors.deepPurple,
+                        backgroundColor: Colors.deepPurpleAccent[400],
                         foregroundColor: Colors.white,
                       ),
                       child: const Text('anmelden'),
@@ -134,6 +143,9 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         Navigator.popAndPushNamed(context, "/registration");
                       },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.deepPurpleAccent[400],
+                      ),
                       child: const Text('registrieren'),
                     ),
                   ],
@@ -142,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           bottomNavigationBar: BottomAppBar(
-            color: Colors.deepPurple,
+            color: Colors.deepPurpleAccent[400],
             child: Padding(
               padding: const EdgeInsets.all(10.0),
               child: Row(

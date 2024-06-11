@@ -36,6 +36,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
 
     if (response.statusCode == 200) {
+      var snackBar = ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(child: Text('Registrierung erfolgreich')),
+        backgroundColor: Colors.teal,
+      ));
+      // Wait for the SnackBar to close
+      await snackBar.closed;
       Navigator.popAndPushNamed(context, "/login");
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -94,17 +100,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 onPressed: () => registerUser(context),
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size.fromHeight(50),
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Colors.deepPurpleAccent[400],
                   foregroundColor: Colors.white,
                 ),
                 child: const Text('registrieren'),
               ),
+              TextButton(
+                onPressed: () {
+                  Navigator.popAndPushNamed(context, "/login");
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.deepPurpleAccent[400],
+                ),
+                child: const Text('anmelden'),
+              )
             ],
           ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.deepPurple,
+        color: Colors.deepPurpleAccent[400],
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
