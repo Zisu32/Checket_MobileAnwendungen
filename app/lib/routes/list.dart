@@ -43,7 +43,7 @@ class _ListPageState extends State<ListPage> {
                 label: const Text('Report'),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
-                  backgroundColor: Colors.deepPurple,
+                  backgroundColor: Colors.deepPurpleAccent[400],
                   foregroundColor: Colors.white,
                 ),
               ),

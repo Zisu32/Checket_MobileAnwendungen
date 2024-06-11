@@ -22,37 +22,51 @@ class CommenFooterMenu {
     }
   }
 
+  Widget _iconWithIndicator(Widget icon, bool isActive) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Container(
+          height: 2, // Height of the indicator
+          width: 24, // Width of the indicator
+          color: isActive ? Colors.deepPurpleAccent[100] : Colors.transparent,
+        ),
+        const SizedBox(height: 6), // Space between indicator and icon
+        icon,
+      ],
+    );
+  }
+
   getFooterMenu(int index) {
     var bnb = BottomNavigationBar(
         currentIndex: index,
         selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.black87,
+        unselectedItemColor: Colors.deepPurple[900],
         selectedFontSize: 12.0,
         unselectedFontSize: 12.0,
         iconSize: 24.0,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
-
-        items: const [
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(Icons.camera_alt),
+              icon: _iconWithIndicator(const Icon(Icons.camera_alt), index == 0),
               label: 'Kamera'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.qr_code_scanner),
+              icon: _iconWithIndicator(const Icon(Icons.qr_code_scanner), index == 1),
               label: 'Scanner'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.list),
+              icon: _iconWithIndicator(const Icon(Icons.list), index == 2),
               label: 'Liste'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
+              icon: _iconWithIndicator(const Icon(Icons.settings), index == 3),
               label: 'Einstellungen'),
         ],
         onTap: (int index) {
           goScreen(index);
         });
     var theme = Theme(
-        data: Theme.of(context).copyWith(canvasColor: Colors.deepPurple),
+        data: Theme.of(context).copyWith(canvasColor: Colors.deepPurpleAccent[400]),
         child: bnb);
     return theme;
   }

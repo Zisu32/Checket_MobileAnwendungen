@@ -52,6 +52,7 @@ class _CameraPageState extends State<CameraPage> {
     return Scaffold(
       backgroundColor: Colors.grey[850], // Background color of the scaffold
       bottomNavigationBar: CommenFooterMenu(context).getFooterMenu(0),
+
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -70,14 +71,14 @@ class _CameraPageState extends State<CameraPage> {
                   icon: const Icon(Icons.camera),
                   label: const Text('aufnehmen'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: Colors.deepPurpleAccent[400],
                     foregroundColor: Colors.white,
                   ),
                 ),
                 ElevatedButton(
                   onPressed: toggleFlash,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isFlashOn ? Colors.deepPurple : Colors.white12,
+                    backgroundColor: isFlashOn ? Colors.deepPurpleAccent[400] : Colors.white12,
                     foregroundColor: Colors.white,
                   ),
                   child: Icon(
@@ -148,7 +149,7 @@ class _CameraPageState extends State<CameraPage> {
                     onPressed: () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.deepPurple, // Text color of the button
+                      backgroundColor: Colors.deepPurpleAccent[400], // Text color of the button
                     ),
                     child: const Text('schließen'),
                   ),

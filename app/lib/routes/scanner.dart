@@ -39,7 +39,7 @@ class _ScannerPageState extends State<ScannerPage> {
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
               overlay: QrScannerOverlayShape(
-                borderColor: Colors.cyanAccent,
+                borderColor: Colors.deepPurpleAccent,
                 borderRadius: 10,
                 borderLength: 30,
                 borderWidth: 10,
@@ -59,7 +59,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   icon: const Icon(Icons.check),
                   label: const Text('abgeholt'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurple,
+                    backgroundColor: Colors.deepPurpleAccent[400],
                     foregroundColor: Colors.white,
                   ),
                 ),
@@ -106,7 +106,7 @@ class _ScannerPageState extends State<ScannerPage> {
                     onPressed: () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.deepPurple,
+                      backgroundColor: Colors.deepPurpleAccent[400],
                     ),
                     child: const Text('schließen'),
                   ),
