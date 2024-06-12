@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 
 class CommenFooterMenu {
   late BuildContext context;
+  int initialPictureCounter;
 
-  CommenFooterMenu(this.context);
+  CommenFooterMenu(this.context, {this.initialPictureCounter = 0});
 
   void goScreen(int newScreen) {
     switch (newScreen) {
       case 0:
-        Navigator.popAndPushNamed(context, "/camera");
-        break;
+        Navigator.popAndPushNamed(context, "/camera", arguments: initialPictureCounter);
+        break;        break;
       case 1:
         Navigator.popAndPushNamed(context, "/scanner");
         break;

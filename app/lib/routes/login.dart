@@ -57,7 +57,8 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
-      Navigator.popAndPushNamed(context, "/camera");
+      // Counter should start at 0 when coming from the login
+      Navigator.popAndPushNamed(context, "/camera", arguments: 0);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Logindaten prüfen')),
