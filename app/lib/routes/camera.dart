@@ -5,7 +5,8 @@ import 'package:app/routes/footer_menu.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({super.key});
+  final int initialPictureCounter; //Save the picureCounter value across the navigation
+  const CameraPage({super.key, this.initialPictureCounter = 0});
 
   @override
   _CameraPageState createState() => _CameraPageState();
@@ -21,24 +22,22 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
-    availableCameras().then((availableCameras) {
-      cameras = availableCameras;
+    pictureCounter = widget.initialPictureCounter;
+    initializeCamera();
+  }
+
+  Future<void> initializeCamera() async {
+    try {
+      cameras = await availableCameras();
       if (cameras!.isNotEmpty) {
         controller = CameraController(cameras![0], ResolutionPreset.high);
-        controller!.initialize().then((_) {
-          if (!mounted) {
-            return;
-          }
-          setState(() {
-            isCameraReady = true;
-          });
-        }).catchError((err) {
-          print('Error initializing camera: $err');
-        });
+        await controller?.initialize();
+        if (!mounted) return;
+        setState(() => isCameraReady = true);
       }
-    }).catchError((err) {
-      print('Error fetching cameras: $err');
-    });
+    } catch (e) {
+      print('Error initializing camera: $e');
+    }
   }
 
   @override
