@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -15,11 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Future<String?> getSavedImagePath() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('imagePath');
-  }
-
   Future<void> loginUser(BuildContext context) async {
     // Check if the username or password fields are empty
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
@@ -27,12 +22,10 @@ class _LoginPageState extends State<LoginPage> {
         content: Center(child: Text('Benutzername und Passwort eintragen')),
         backgroundColor: Colors.redAccent,
       ));
-      return; // Exit the function early if any field is empty
+      return;
     }
-
     // Proceed with login if both fields are filled
-    var url =
-        Uri.parse('http://10.0.2.2:3000/login'); // Adjust URL for your backend
+    var url = Uri.parse('http://10.0.2.2:3000/login');
     var response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -52,12 +45,17 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<String?> getSavedImagePath() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('imagePath');
+  }
+
+  //ImageLoader
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
       future: getSavedImagePath(),
       builder: (context, snapshot) {
-        // Existing build implementation with minor adjustments to use _usernameController and _passwordController
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
@@ -69,87 +67,84 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         }
-
         bool fileExists = false;
         if (snapshot.hasData && snapshot.data != null) {
           fileExists = File(snapshot.data!).existsSync();
         }
-
+        //Display ImageBox
         Widget imageWidget = SizedBox(
-            height: 250,
+            height: 300,
             child: snapshot.hasData && fileExists
                 ? Image.file(
                     File(snapshot.data!),
                     fit: BoxFit.cover,
                   )
                 : const Placeholder(
-                    fallbackHeight: 250, fallbackWidth: double.infinity));
+                    fallbackHeight: 300, fallbackWidth: double.infinity));
 
         return Scaffold(
           backgroundColor: Colors.grey[850],
           resizeToAvoidBottomInset: true,
           body: SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    imageWidget,
-                    const SizedBox(height: 50),
-                    TextFormField(
-                      controller: _usernameController,
-                      decoration: InputDecoration(
-                        labelText: 'Benutzername',
-                        fillColor: Colors.white,
-                        filled: true,
-                        prefixIcon: const Icon(
-                          Icons.person,
-                          size: 20,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                        ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  imageWidget,
+                  const SizedBox(height: 50),
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      labelText: 'Benutzername',
+                      fillColor: Colors.white,
+                      filled: true,
+                      prefixIcon: const Icon(
+                        Icons.person,
+                        size: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(0.0),
                       ),
                     ),
-                    const SizedBox(height: 25),
-                    TextFormField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'Passwort',
-                        fillColor: Colors.white,
-                        filled: true,
-                        prefixIcon: const Icon(
-                          Icons.lock,
-                          size: 20,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                        ),
+                  ),
+                  const SizedBox(height: 25),
+                  TextFormField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: 'Passwort',
+                      fillColor: Colors.white,
+                      filled: true,
+                      prefixIcon: const Icon(
+                        Icons.lock,
+                        size: 20,
                       ),
-                      obscureText: true,
-                    ),
-                    const SizedBox(height: 25),
-                    ElevatedButton(
-                      onPressed: () => loginUser(context),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                        backgroundColor: Colors.deepPurpleAccent[400],
-                        foregroundColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(0.0),
                       ),
-                      child: const Text('anmelden'),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.popAndPushNamed(context, "/registration");
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.deepPurpleAccent[400],
-                      ),
-                      child: const Text('registrieren'),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 25),
+                  ElevatedButton(
+                    onPressed: () => loginUser(context),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(50),
+                      backgroundColor: Colors.deepPurpleAccent[400],
+                      foregroundColor: Colors.white,
                     ),
-                  ],
-                ),
+                    child: const Text('anmelden'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.popAndPushNamed(context, "/registration");
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.deepPurpleAccent[400],
+                    ),
+                    child: const Text('registrieren'),
+                  ),
+                ],
               ),
             ),
           ),

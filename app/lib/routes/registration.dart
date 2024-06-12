@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+  const RegistrationPage({super.key});
 
   @override
   _RegistrationPageState createState() => _RegistrationPageState();
@@ -31,7 +31,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: json.encode({
         'username': _usernameController.text,
         'password': _passwordController.text,
-        'imagePath': '', // no image path is provided during registration
       }),
     );
 
@@ -40,9 +39,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
         content: Center(child: Text('Registrierung erfolgreich')),
         backgroundColor: Colors.teal,
       ));
-      // Wait for the SnackBar to close
       await snackBar.closed;
       Navigator.popAndPushNamed(context, "/login");
+    } else if (response.statusCode == 409) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Center(child: Text('Benutzername schon vergeben')),
+        backgroundColor: Colors.redAccent,
+      ));
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Registrierung fehlgeschlagen')),
@@ -71,7 +74,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   border: OutlineInputBorder(),
                 ),
               ),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               TextFormField(
                 controller: _passwordController,
                 decoration: const InputDecoration(
@@ -83,7 +86,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
                 obscureText: true,
               ),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               TextFormField(
                 controller: _repeatPasswordController,
                 decoration: const InputDecoration(
@@ -95,11 +98,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
                 obscureText: true,
               ),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               ElevatedButton(
                 onPressed: () => registerUser(context),
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size.fromHeight(50),
+                  minimumSize: const Size.fromHeight(50),
                   backgroundColor: Colors.deepPurpleAccent[400],
                   foregroundColor: Colors.white,
                 ),

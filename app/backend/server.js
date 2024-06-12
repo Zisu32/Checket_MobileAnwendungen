@@ -1,54 +1,64 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
 
-
 // Register User
 app.post('/registration', async (req, res) => {
   const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);  // Hash the password
+
+  // Check if username already exists
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      username: username,
+    },
+  });
+
+  if (existingUser) {
+    return res.status(409).json({ message: "Benutzername schon vergeben" });
+  }
+
+  // Hash Password
+  const hashedPassword = await bcrypt.hash(password, 10);
   try {
     const newUser = await prisma.user.create({
       data: {
         username,
         password: hashedPassword,
-        imagePath: ''
       },
     });
     res.json(newUser);
-} catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(400).json({ error: error.message });
-}
+  }
 });
 
 // Login User
- app.post('/login', async (req, res) => {
-   const { username, password } = req.body;
+app.post('/login', async (req, res) => {
+  const { username, password } = req.body;
 
-   try {
-     const user = await prisma.user.findUnique({
-       where: {
-         username: username,
-       },
-     });
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
 
-     if (user && bcrypt.compareSync(password, user.password)) {
-       res.json({ message: "Login successful", user });
-     } else {
-       res.status(401).json({ message: "Invalid credentials" });
-     }
-   } catch (error) {
-     console.error(error);
-     res.status(500).json({ error: error.message });
-   }
- });
+    if (user && bcrypt.compareSync(password, user.password)) {
+      res.json({ message: "Login successful", user });
+    } else {
+      res.status(401).json({ message: "Invalid credentials" });
+    }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message }); // Corrected from `error message` to `error.message`
+    }
 
+});
 
 // Server running port
 const PORT = process.env.PORT || 3000;

@@ -21,8 +21,59 @@ class _ScannerPageState extends State<ScannerPage> {
     if (Platform.isAndroid) {
       controller?.pauseCamera();
     } else if (Platform.isIOS) {
+      controller?.pauseCamera();
       controller?.resumeCamera();
     }
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      setState(() {
+        result = scanData;
+      });
+      if (result != null) {
+        controller.pauseCamera();
+        showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: Colors.grey[850],
+              title: Text(
+                result?.code ?? '',
+                style: const TextStyle(
+                  color: Colors.deepPurpleAccent,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 100,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              actions: <Widget>[
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.deepPurpleAccent[400],
+                    ),
+                    child: const Text('schließen'),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -54,7 +105,7 @@ class _ScannerPageState extends State<ScannerPage> {
               children: <Widget>[
                 ElevatedButton.icon(
                   onPressed: () {
-                    controller?.resumeCamera(); // Resume the camera
+                    controller?.resumeCamera(); //start Scanner again
                   },
                   icon: const Icon(Icons.check),
                   label: const Text('abgeholt'),
@@ -69,59 +120,5 @@ class _ScannerPageState extends State<ScannerPage> {
         ],
       ),
     );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-      if (result != null) {
-        controller.pauseCamera(); // Pause the camera
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false, // User must tap button!
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: Colors.grey[850],
-              title: Center(
-                child: SizedBox(
-                  width: 250,
-                  height: 400,
-                  child: Text(
-                    result != null ? '${result!.code}' : '', //show QR-Scanned Number
-                    style: const TextStyle(
-                      color: Colors.cyanAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 100,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              actions: <Widget>[
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.deepPurpleAccent[400],
-                    ),
-                    child: const Text('schließen'),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose(); // Properly dispose of the controller
-    super.dispose();
   }
 }
