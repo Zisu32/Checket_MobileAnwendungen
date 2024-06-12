@@ -16,6 +16,12 @@ class _ScannerPageState extends State<ScannerPage> {
   Barcode? result;
 
   @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
@@ -68,12 +74,6 @@ class _ScannerPageState extends State<ScannerPage> {
         );
       }
     });
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 
   @override
