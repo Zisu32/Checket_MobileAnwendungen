@@ -12,8 +12,29 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _repeatPasswordController =
-      TextEditingController();
+  final TextEditingController _repeatPasswordController = TextEditingController();
+  final FocusNode _usernameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _repeatPasswordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameFocusNode.addListener(() { setState(() {}); });
+    _passwordFocusNode.addListener(() { setState(() {}); });
+    _repeatPasswordFocusNode.addListener(() { setState(() {}); });
+  }
+
+  @override
+  void dispose() {
+    _usernameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _repeatPasswordFocusNode.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _repeatPasswordController.dispose();
+    super.dispose();
+  }
 
   Future<void> registerUser(BuildContext context) async {
     if (_passwordController.text != _repeatPasswordController.text) {
@@ -35,12 +56,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
 
     if (response.statusCode == 200) {
-      var snackBar = ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Registrierung erfolgreich')),
         backgroundColor: Colors.teal,
       ));
-      await snackBar.closed;
-      Navigator.popAndPushNamed(context, "/login");
+      Navigator.popAndPushNamed(context, "/login"); // Navigate immediately.
     } else if (response.statusCode == 409) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Benutzername schon vergeben')),
@@ -66,37 +86,58 @@ class _RegistrationPageState extends State<RegistrationPage> {
             children: <Widget>[
               TextFormField(
                 controller: _usernameController,
-                decoration: const InputDecoration(
-                  labelText: 'Benutzername',
+                focusNode: _usernameFocusNode,
+                decoration: InputDecoration(
+                  hintText: 'Benutzername',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: Icon(Icons.person, size: 20),
-                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(
+                    Icons.person,
+                    color: _usernameFocusNode.hasFocus ? Colors.deepPurpleAccent[400] : Colors.grey[700],
+                  ),
+                  border: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.deepPurpleAccent[400]!, width: 2.0),
+                  ),
                 ),
               ),
               const SizedBox(height: 25),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Passwort',
+                focusNode: _passwordFocusNode,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Passwort',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: Icon(Icons.lock, size: 20),
-                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    color: _passwordFocusNode.hasFocus ? Colors.deepPurpleAccent[400] : Colors.grey[700],
+                  ),
+                  border: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.deepPurpleAccent[400]!, width: 2.0),
+                  ),
                 ),
-                obscureText: true,
               ),
               const SizedBox(height: 25),
               TextFormField(
                 controller: _repeatPasswordController,
-                decoration: const InputDecoration(
-                  labelText: 'Passwort wiederholen',
+                focusNode: _repeatPasswordFocusNode,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Passwort wiederholen',
                   fillColor: Colors.white,
                   filled: true,
-                  prefixIcon: Icon(Icons.lock, size: 20),
-                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(
+                    Icons.lock,
+                    color: _repeatPasswordFocusNode.hasFocus ? Colors.deepPurpleAccent[400] : Colors.grey[700],
+                  ),
+                  border: const OutlineInputBorder(),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.deepPurpleAccent[400]!, width: 2.0),
+                  ),
                 ),
-                obscureText: true,
               ),
               const SizedBox(height: 25),
               ElevatedButton(

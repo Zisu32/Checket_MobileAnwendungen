@@ -14,9 +14,30 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _usernameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _usernameFocusNode.addListener(() {
+      setState(() {}); // Update the UI when focus changes
+    });
+    _passwordFocusNode.addListener(() {
+      setState(() {}); // Update the UI when focus changes
+    });
+  }
+
+  @override
+  void dispose() {
+    _usernameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   Future<void> loginUser(BuildContext context) async {
-    // Check if the username or password fields are empty
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Benutzername und Passwort eintragen')),
@@ -24,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
       ));
       return;
     }
-    // Proceed with login if both fields are filled
+
     var url = Uri.parse('http://10.0.2.2:3000/login');
     var response = await http.post(
       url,
@@ -50,101 +71,90 @@ class _LoginPageState extends State<LoginPage> {
     return prefs.getString('imagePath');
   }
 
-  //ImageLoader
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
       future: getSavedImagePath(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(
-              child: Text('Error: ${snapshot.error}'),
-            ),
-          );
-        }
-        bool fileExists = false;
-        if (snapshot.hasData && snapshot.data != null) {
-          fileExists = File(snapshot.data!).existsSync();
-        }
-        //Display ImageBox
         Widget imageWidget = SizedBox(
             height: 300,
-            child: snapshot.hasData && fileExists
-                ? Image.file(
-                    File(snapshot.data!),
-                    fit: BoxFit.cover,
-                  )
-                : const Placeholder(
-                    fallbackHeight: 300, fallbackWidth: double.infinity));
+            child: snapshot.hasData && File(snapshot.data!).existsSync()
+                ? Image.file(File(snapshot.data!), fit: BoxFit.cover)
+                : const Placeholder(fallbackHeight: 300, fallbackWidth: double.infinity));
 
         return Scaffold(
           backgroundColor: Colors.grey[850],
           resizeToAvoidBottomInset: true,
           body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  imageWidget,
-                  const SizedBox(height: 50),
-                  TextFormField(
-                    controller: _usernameController,
-                    decoration: InputDecoration(
-                      labelText: 'Benutzername',
-                      fillColor: Colors.white,
-                      filled: true,
-                      prefixIcon: const Icon(
-                        Icons.person,
-                        size: 20,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0.0),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  TextFormField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: 'Passwort',
-                      fillColor: Colors.white,
-                      filled: true,
-                      prefixIcon: const Icon(
-                        Icons.lock,
-                        size: 20,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(0.0),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    imageWidget,
+                    const SizedBox(height: 50),
+                    TextFormField(
+                      controller: _usernameController,
+                      focusNode: _usernameFocusNode,
+                      decoration: InputDecoration(
+                        hintText: 'Benutzername',
+                        fillColor: Colors.white,
+                        filled: true,
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: _usernameFocusNode.hasFocus ? Colors.deepPurpleAccent[400] : Colors.grey[700],
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurpleAccent[400]!, width: 2.0),
+                        ),
                       ),
                     ),
-                    obscureText: true,
-                  ),
-                  const SizedBox(height: 25),
-                  ElevatedButton(
-                    onPressed: () => loginUser(context),
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                      backgroundColor: Colors.deepPurpleAccent[400],
-                      foregroundColor: Colors.white,
+                    const SizedBox(height: 25),
+                    TextFormField(
+                      controller: _passwordController,
+                      focusNode: _passwordFocusNode,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Passwort',
+                        fillColor: Colors.white,
+                        filled: true,
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: _passwordFocusNode.hasFocus ? Colors.deepPurpleAccent[400] : Colors.grey[700],
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurpleAccent[400]!, width: 2.0),
+                        ),
+                      ),
                     ),
-                    child: const Text('anmelden'),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.popAndPushNamed(context, "/registration");
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.deepPurpleAccent[400],
+                    const SizedBox(height: 25),
+                    ElevatedButton(
+                      onPressed: () => loginUser(context),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        backgroundColor: Colors.deepPurpleAccent[400],
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text('anmelden'),
                     ),
-                    child: const Text('registrieren'),
-                  ),
-                ],
+                    TextButton(
+                      onPressed: () {
+                        Navigator.popAndPushNamed(context, "/registration");
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.deepPurpleAccent[400],
+                      ),
+                      child: const Text('registrieren'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
