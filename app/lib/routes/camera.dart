@@ -16,7 +16,7 @@ class _CameraPageState extends State<CameraPage> {
   List<CameraDescription>? cameras;
   bool isCameraReady = false;
   bool isFlashOn = false;
-  int pictureCounter = 0;  // To keep track of pictures taken
+  int pictureCounter = 0;
 
   @override
   void initState() {
@@ -47,12 +47,99 @@ class _CameraPageState extends State<CameraPage> {
     super.dispose();
   }
 
+  Future<void> takePicture() async {
+    if (controller == null || !controller!.value.isInitialized) {
+      print('Error: select a camera first.');
+      return;
+    }
+    try {
+      final XFile file = await controller!.takePicture();
+      pictureCounter++;
+      print('Picture saved to ${file.path}');
+
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: Colors.grey[850],
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$pictureCounter',
+                    style: const TextStyle(
+                      color: Colors.deepPurpleAccent,
+                      fontSize: 100,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: 250,
+                    height: 250,
+                    child: QrImageView(
+                      data: 'Number: $pictureCounter , '
+                          'Path: ${file.path}',
+                      version: QrVersions.auto,
+                      backgroundColor: Colors.white,
+                      size: 200.0,
+                      gapless: false,
+                      errorStateBuilder: (cxt, err) {
+                        return const Center(
+                          child: Text(
+                            "Error generating QR code",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: Colors.deepPurpleAccent[400],
+                    ),
+                    child: const Text('schließen'),
+                  ),
+                ),
+              ],
+            );
+          });
+    } catch (e) {
+      print('Error taking picture: $e');
+    }
+  }
+
+  void toggleFlash() async {
+    if (controller == null || !controller!.value.isInitialized) {
+      print('Error: camera not initialized.');
+      return;
+    }
+    try {
+      if (!isFlashOn) {
+        await controller!.setFlashMode(FlashMode.torch);
+      } else {
+        await controller!.setFlashMode(FlashMode.off);
+      }
+      setState(() {
+        isFlashOn = !isFlashOn;
+      });
+    } catch (e) {
+      print('Failed to toggle flash: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[850], // Background color of the scaffold
+      backgroundColor: Colors.grey[850],
       bottomNavigationBar: CommenFooterMenu(context).getFooterMenu(0),
-
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -78,7 +165,9 @@ class _CameraPageState extends State<CameraPage> {
                 ElevatedButton(
                   onPressed: toggleFlash,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isFlashOn ? Colors.deepPurpleAccent[400] : Colors.white12,
+                    backgroundColor: isFlashOn
+                        ? Colors.deepPurpleAccent[400]
+                        : Colors.white12,
                     foregroundColor: Colors.white,
                   ),
                   child: Icon(
@@ -91,94 +180,5 @@ class _CameraPageState extends State<CameraPage> {
         ],
       ),
     );
-  }
-
-  Future<void> takePicture() async {
-    if (controller == null || !controller!.value.isInitialized) {
-      print('Error: select a camera first.');
-      return;
-    }
-    try {
-      final XFile file = await controller!.takePicture();
-      pictureCounter++;  // Increment the counter whenever a picture is taken
-      print('Picture saved to ${file.path}');
-
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: Colors.grey[850], // Background color of the AlertDialog
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '$pictureCounter',
-                    style: const TextStyle(
-                      color: Colors.cyanAccent,
-                      fontSize: 100,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: 250,
-                    height: 250,
-                    child: QrImageView(
-                      data: 'Number: $pictureCounter , '
-                          'Path: ${file.path}',
-                      version: QrVersions.auto,
-                      backgroundColor: Colors.white,
-                      size: 200.0,
-                      gapless: false,
-                      errorStateBuilder: (cxt, err) {
-                        return const Center(
-                          child: Text(
-                            "Error generating QR code",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white), // Error text color
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              actions: [
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.deepPurpleAccent[400], // Text color of the button
-                    ),
-                    child: const Text('schließen'),
-                  ),
-                ),
-              ],
-            );
-          }
-      );
-    } catch (e) {
-      print('Error taking picture: $e');
-    }
-  }
-
-  void toggleFlash() async {
-    if (controller == null || !controller!.value.isInitialized) {
-      print('Error: camera not initialized.');
-      return;
-    }
-    try {
-      if (!isFlashOn) {
-        await controller!.setFlashMode(FlashMode.torch);
-      } else {
-        await controller!.setFlashMode(FlashMode.off);
-      }
-      setState(() {
-        isFlashOn = !isFlashOn;
-      });
-    } catch (e) {
-      print('Failed to toggle flash: $e');
-    }
   }
 }

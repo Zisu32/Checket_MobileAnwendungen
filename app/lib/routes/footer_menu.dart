@@ -27,8 +27,8 @@ class CommenFooterMenu {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Container(
-          height: 2, // Height of the indicator
-          width: 24, // Width of the indicator
+          height: 2,
+          width: 24,
           color: isActive ? Colors.deepPurpleAccent[100] : Colors.transparent,
         ),
         const SizedBox(height: 6), // Space between indicator and icon

@@ -33,44 +33,18 @@ class SettingPageState extends State<SettingPage> {
     }
   }
 
-  Future<int> showOptions() async {
-    debugPrint('Showing options');
-    return await showModalBottomSheet<int>(
-      context: context,
-      backgroundColor: Colors.grey[850],
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                leading: const Icon(Icons.photo_library, color: Colors.white),
-                title: const Text('Foto Galerie', style: TextStyle(color: Colors.white)),
-                onTap: () => Navigator.of(context).pop(1),
-              ),
-              ListTile(
-                leading: const Icon(Icons.camera_alt, color: Colors.white),
-                title: const Text('Kamera', style: TextStyle(color: Colors.white)),
-                onTap: () => Navigator.of(context).pop(2),  // Changed this from a const ListTile to one that can react to onTap
-              ),
-            ],
-          ),
-        );
-      },
-    ) ?? 0;  // Handling null (when the user taps outside the bottom sheet)
-  }
-
-  Future<void> pickImage(BuildContext context) async {
-    var status = await Permission.photos.status;
-    if (!status.isGranted) {
-      status = await Permission.photos.request();
+  Future<void> pickImageFromCamera(BuildContext context) async {
+    var cameraStatus = await Permission.camera.status;
+    if (!cameraStatus.isGranted) {
+      cameraStatus = await Permission.camera.request();
     }
-    if (status.isGranted && !isPickerActive) {
+    if (cameraStatus.isGranted && !isPickerActive) {
       isPickerActive = true;
       int source = await showOptions();
       debugPrint('User selected: $source');
       if (source != 0) {
-        await pickImageFromSource(source == 1 ? ImageSource.gallery : ImageSource.camera);
+        await pickImageFromSource(
+            source == 1 ? ImageSource.gallery : ImageSource.camera);
       }
       isPickerActive = false;
     } else {
@@ -81,9 +55,9 @@ class SettingPageState extends State<SettingPage> {
     }
   }
 
-
   Future<void> pickImageFromSource(ImageSource source) async {
-    final pickedFile = await imagePickerImplementation.getImageFromSource(source: source);
+    final pickedFile =
+        await imagePickerImplementation.getImageFromSource(source: source);
     if (pickedFile != null && pickedFile.path.isNotEmpty) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('imagePath', pickedFile.path);
@@ -102,11 +76,42 @@ class SettingPageState extends State<SettingPage> {
     }
   }
 
+  Future<int> showOptions() async {
+    debugPrint('Showing options');
+    return await showModalBottomSheet<int>(
+          context: context,
+          backgroundColor: Colors.grey[850],
+          builder: (BuildContext context) {
+            return SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading:
+                        const Icon(Icons.photo_library, color: Colors.white),
+                    title: const Text('Foto Galerie',
+                        style: TextStyle(color: Colors.white)),
+                    onTap: () => Navigator.of(context).pop(1),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.camera_alt, color: Colors.white),
+                    title: const Text('Kamera',
+                        style: TextStyle(color: Colors.white)),
+                    onTap: () => Navigator.of(context).pop(2),
+                  ),
+                ],
+              ),
+            );
+          },
+        ) ??
+        0; // Handling null (when the user taps outside the bottom sheet)
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[850],
-      bottomNavigationBar: CommenFooterMenu(context).getFooterMenu(3),  // Ensure correct name
+      bottomNavigationBar: CommenFooterMenu(context).getFooterMenu(3),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -122,7 +127,7 @@ class SettingPageState extends State<SettingPage> {
                 ),
               const SizedBox(height: 20),
               ElevatedButton.icon(
-                onPressed: () => pickImage(context),
+                onPressed: () => pickImageFromCamera(context),
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size.fromHeight(50),
                   backgroundColor: Colors.deepPurpleAccent[400],
