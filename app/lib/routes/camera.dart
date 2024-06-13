@@ -5,8 +5,7 @@ import 'package:app/routes/footer_menu.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class CameraPage extends StatefulWidget {
-  final int initialPictureCounter; //Save the picureCounter value across the navigation
-  const CameraPage({super.key, this.initialPictureCounter = 0});
+  const CameraPage({super.key});
 
   @override
   _CameraPageState createState() => _CameraPageState();
@@ -17,12 +16,10 @@ class _CameraPageState extends State<CameraPage> {
   List<CameraDescription>? cameras;
   bool isCameraReady = false;
   bool isFlashOn = false;
-  int pictureCounter = 0;
 
   @override
   void initState() {
     super.initState();
-    pictureCounter = widget.initialPictureCounter;
     initializeCamera();
   }
 
@@ -53,7 +50,6 @@ class _CameraPageState extends State<CameraPage> {
     }
     try {
       final XFile file = await controller!.takePicture();
-      pictureCounter++;
       print('Picture saved to ${file.path}');
 
       showDialog(
@@ -65,7 +61,7 @@ class _CameraPageState extends State<CameraPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '$pictureCounter',
+                    'pictureCounter',
                     style: const TextStyle(
                       color: Colors.deepPurpleAccent,
                       fontSize: 100,
@@ -77,8 +73,7 @@ class _CameraPageState extends State<CameraPage> {
                     width: 250,
                     height: 250,
                     child: QrImageView(
-                      data: 'Number: $pictureCounter , '
-                          'Path: ${file.path}',
+                      data: 'qrString',
                       version: QrVersions.auto,
                       backgroundColor: Colors.white,
                       size: 200.0,
