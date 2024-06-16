@@ -139,16 +139,16 @@ class _CameraPageState extends State<CameraPage> {
     return Scaffold(
       backgroundColor: Colors.grey[850],
       bottomNavigationBar: CommenFooterMenu(context).getFooterMenu(0),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
         children: <Widget>[
           if (isCameraReady && controller != null)
-            Expanded(
-              flex: 8,
+            Positioned.fill(
               child: CameraPreview(controller!),
             ),
-          Padding(
-            padding: const EdgeInsets.all(25.0),
+          Positioned(
+            bottom: 40,
+            left: 20,
+            right: 20,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -166,7 +166,7 @@ class _CameraPageState extends State<CameraPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isFlashOn
                         ? Colors.deepPurpleAccent[400]
-                        : Colors.white12,
+                        : Colors.grey[850],
                     foregroundColor: Colors.white,
                   ),
                   child: Icon(

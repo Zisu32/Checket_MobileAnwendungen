@@ -2,7 +2,7 @@ enum Status { verfuegbar, abgeholt, verloren }
 
 class Jacket {
   final int jacketNumber;
-  final Status status;
+  late Status status;
   final String imagePath;
   final String qrString;
 

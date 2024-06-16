@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
 import 'package:app/routes/footer_menu.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:app/provider/jacketProvider.dart';
+import 'package:app/models/jacketModel.dart';
 
 class ScannerPage extends StatefulWidget {
   const ScannerPage({super.key});
@@ -14,22 +16,19 @@ class _ScannerPageState extends State<ScannerPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   QRViewController? controller;
   Barcode? result;
+  Jacket? scannedQRStringJacket;
+
+  void _markJacketAsCollected() {
+    if (scannedQRStringJacket != null) {
+      Provider.of<JacketProvider>(context, listen: false)
+          .updateJacketStatus(scannedQRStringJacket!.qrString, Status.abgeholt);
+    }
+  }
 
   @override
   void dispose() {
     controller?.dispose();
     super.dispose();
-  }
-
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller?.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller?.pauseCamera();
-      controller?.resumeCamera();
-    }
   }
 
   void _onQRViewCreated(QRViewController controller) {
@@ -38,45 +37,61 @@ class _ScannerPageState extends State<ScannerPage> {
       setState(() {
         result = scanData;
       });
+
       if (result != null) {
-        controller.pauseCamera();
-        /* retrive Jacket from Provider
-        Jacket = Provider.of<JacketProvider>(context, listen: false).getJacket(qrString)
-        Image = Image(Jacket.imagePath);
-        number = Jacket.numberM;
-        */
-        showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: Colors.grey[850],
-              title: Text(
-                result?.code ?? '',
-                style: const TextStyle(
-                  color: Colors.deepPurpleAccent,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 100,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              actions: <Widget>[
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.deepPurpleAccent[400],
-                    ),
-                    child: const Text('schließen'),
+       scannedQRStringJacket = Provider.of<JacketProvider>(context, listen: false).getJacketByQrString(result!.code!);
+
+        if (scannedQRStringJacket != null) {
+          controller.stopCamera();
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.grey[850],
+                title: Text(
+                  '${scannedQRStringJacket!.jacketNumber}',
+                  style: const TextStyle(
+                    color: Colors.deepPurpleAccent,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 100,
                   ),
+                  textAlign: TextAlign.center,
                 ),
-              ],
-            );
-          },
-        );
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.network(scannedQRStringJacket!.imagePath, fit: BoxFit.cover),
+                    const SizedBox(height: 40),
+                  ],
+                ),
+                actions: <Widget>[
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        _markJacketAsCollected();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                            content: Center(child: Text('Abholung erfolgreich')),
+                              backgroundColor: Colors.teal,
+                              duration: Duration(seconds: 2),
+                            ),
+                        );
+                        controller!.resumeCamera();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.deepPurpleAccent[400],
+                      ),
+                      child: const Text('abgeholt'),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
     });
   }
@@ -101,25 +116,6 @@ class _ScannerPageState extends State<ScannerPage> {
                 borderWidth: 10,
                 cutOutSize: MediaQuery.of(context).size.width * 0.8,
               ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ElevatedButton.icon(
-                  onPressed: () {
-                    controller?.resumeCamera(); //start Scanner again
-                  },
-                  icon: const Icon(Icons.check),
-                  label: const Text('abgeholt'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.deepPurpleAccent[400],
-                    foregroundColor: Colors.white,
-                  ),
-                ),
-              ],
             ),
           ),
         ],

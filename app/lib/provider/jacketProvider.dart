@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/models//jacketModel.dart';
+import 'package:app/models/jacketModel.dart';
 import 'package:random_string/random_string.dart';
 
 class JacketProvider extends ChangeNotifier {
@@ -18,13 +18,34 @@ class JacketProvider extends ChangeNotifier {
     return qrString;
   }
 
+  Jacket? getJacketByQrString(String qrString) {
+    try {
+      return jacketList.firstWhere((jacket) => jacket.qrString == qrString);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  void updateJacketStatus(String qrString, Status newStatus) {
+    for (var jacket in jacketList) {
+      if (jacket.qrString == qrString) {
+        jacket.status = newStatus;
+        print('Jacket updated Status: ${jacket.status}');
+        notifyListeners();
+        break;
+      }
+    }
+  }
+
   void addJacketToList(int jacketnumber, String imagePath) {
     Jacket jacket = Jacket(
-        jacketNumber: jacketNumber,
+        jacketNumber: jacketNumber - 1,
         status: Status.verfuegbar,
         imagePath: imagePath,
         qrString: qrString);
     jacketList.add(jacket);
+    print('Jacket added: Number: ${jacket.jacketNumber}, Status: ${jacket.status}, Image Path: ${jacket.imagePath}');
     notifyListeners();
+
   }
 }
