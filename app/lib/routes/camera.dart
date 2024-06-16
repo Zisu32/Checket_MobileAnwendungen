@@ -1,7 +1,9 @@
+import 'package:app/provider/jacketProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
 import 'package:app/routes/footer_menu.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class CameraPage extends StatefulWidget {
@@ -51,6 +53,11 @@ class _CameraPageState extends State<CameraPage> {
     try {
       final XFile file = await controller!.takePicture();
       print('Picture saved to ${file.path}');
+      int jacketNumber = Provider.of<JacketProvider>(context, listen: false).getJacketCounter();
+      String qrString = Provider.of<JacketProvider>(context, listen: false).getQrString();
+      Provider.of<JacketProvider>(context, listen: false).addJacketToList(jacketNumber, file.path);
+
+
 
       showDialog(
           context: context,
@@ -61,7 +68,7 @@ class _CameraPageState extends State<CameraPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'pictureCounter',
+                    jacketNumber.toString(),
                     style: const TextStyle(
                       color: Colors.deepPurpleAccent,
                       fontSize: 100,
@@ -73,7 +80,7 @@ class _CameraPageState extends State<CameraPage> {
                     width: 250,
                     height: 250,
                     child: QrImageView(
-                      data: 'qrString',
+                      data: qrString,
                       version: QrVersions.auto,
                       backgroundColor: Colors.white,
                       size: 200.0,
