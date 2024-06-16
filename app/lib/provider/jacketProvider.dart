@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app/models//jacketModel.dart';
 import 'package:random_string/random_string.dart';
 
-class Jacketprovider extends ChangeNotifier {
+class JacketProvider extends ChangeNotifier {
   int jacketNumber = 1;
   List<Jacket> jacketList = [];
   late String qrString;

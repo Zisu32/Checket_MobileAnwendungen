@@ -57,8 +57,6 @@ class _CameraPageState extends State<CameraPage> {
       String qrString = Provider.of<JacketProvider>(context, listen: false).getQrString();
       Provider.of<JacketProvider>(context, listen: false).addJacketToList(jacketNumber, file.path);
 
-
-
       showDialog(
           context: context,
           builder: (BuildContext context) {
