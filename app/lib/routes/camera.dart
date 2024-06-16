@@ -104,7 +104,7 @@ class _CameraPageState extends State<CameraPage> {
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.deepPurpleAccent[400],
                     ),
-                    child: const Text('schließen'),
+                    child: const Text('hinzufügen'),
                   ),
                 ),
               ],

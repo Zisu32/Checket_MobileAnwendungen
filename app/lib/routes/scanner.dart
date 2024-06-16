@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:app/routes/footer_menu.dart';
 import 'package:provider/provider.dart';
@@ -61,8 +63,12 @@ class _ScannerPageState extends State<ScannerPage> {
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Image.network(scannedQRStringJacket!.imagePath, fit: BoxFit.cover),
-                    const SizedBox(height: 40),
+                    SizedBox(
+                      height: 300,
+                      width: 250,
+                      child: Image.file(File(scannedQRStringJacket!.imagePath), fit: BoxFit.fill),
+                    ),
+                    const SizedBox(height: 15),
                   ],
                 ),
                 actions: <Widget>[
