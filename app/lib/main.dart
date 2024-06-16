@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:app/routes/camera.dart';
 import 'package:app/routes/list.dart';
 import 'package:app/routes/scanner.dart';
 import 'package:app/routes/setting.dart';
 import 'package:app/routes/login.dart';
 import 'package:app/routes/registration.dart';
+import 'package:app/provider/jacketProvider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => JacketProvider()),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

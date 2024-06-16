@@ -40,6 +40,11 @@ class _ScannerPageState extends State<ScannerPage> {
       });
       if (result != null) {
         controller.pauseCamera();
+        /* retrive Jacket from Provider
+        Jacket = Provider.of<JacketProvider>(context, listen: false).getJacket(qrString)
+        Image = Image(Jacket.imagePath);
+        number = Jacket.numberM;
+        */
         showDialog<void>(
           context: context,
           barrierDismissible: false,
