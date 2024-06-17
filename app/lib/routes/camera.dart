@@ -52,7 +52,6 @@ class _CameraPageState extends State<CameraPage> {
     }
     try {
       final XFile file = await controller!.takePicture();
-      print('Picture saved to ${file.path}');
       int jacketNumber = Provider.of<JacketProvider>(context, listen: false).getJacketCounter();
       String qrString = Provider.of<JacketProvider>(context, listen: false).getQrString();
       Provider.of<JacketProvider>(context, listen: false).addJacketToList(jacketNumber, file.path);
@@ -103,6 +102,7 @@ class _CameraPageState extends State<CameraPage> {
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: Colors.deepPurpleAccent[400],
+                      padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 30),
                     ),
                     child: const Text('hinzufügen'),
                   ),
@@ -146,7 +146,7 @@ class _CameraPageState extends State<CameraPage> {
               child: CameraPreview(controller!),
             ),
           Positioned(
-            bottom: 40,
+            bottom: 50,
             left: 20,
             right: 20,
             child: Row(
@@ -159,6 +159,7 @@ class _CameraPageState extends State<CameraPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.deepPurpleAccent[400],
                     foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 30),
                   ),
                 ),
                 ElevatedButton(
@@ -166,8 +167,9 @@ class _CameraPageState extends State<CameraPage> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: isFlashOn
                         ? Colors.deepPurpleAccent[400]
-                        : Colors.grey[850],
+                        : Colors.grey[800],
                     foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 12.0),
                   ),
                   child: Icon(
                     isFlashOn ? Icons.flashlight_on : Icons.flashlight_off,

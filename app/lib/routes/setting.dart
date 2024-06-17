@@ -106,42 +106,44 @@ class SettingPageState extends State<SettingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[850],
-      bottomNavigationBar: CommenFooterMenu(context).getFooterMenu(3),  // Ensure correct name
+      bottomNavigationBar: CommenFooterMenu(context).getFooterMenu(3),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              if (imagePath != null)
-                Image.file(
-                  File(imagePath!),
-                  width: double.infinity,
-                  height: 300,
-                  fit: BoxFit.cover,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                if (imagePath != null)
+                  Image.file(
+                    File(imagePath!),
+                    height: 350,
+                    fit: BoxFit.cover,
+                  ),
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () => pickImage(context),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 85),
+                    backgroundColor: Colors.deepPurpleAccent[400],
+                    foregroundColor: Colors.white,
+                  ),
+                  icon: const Icon(Icons.upload),
+                  label: const Text('Profilbild'),
                 ),
-              const SizedBox(height: 20),
-              ElevatedButton.icon(
-                onPressed: () => pickImage(context),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                  backgroundColor: Colors.deepPurpleAccent[400],
-                  foregroundColor: Colors.white,
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () {
+                    Navigator.popAndPushNamed(context, "/login");
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.deepPurpleAccent[400],
+                  ),
+                  child: const Text('abmelden'),
                 ),
-                icon: const Icon(Icons.upload),
-                label: const Text('Profilbild'),
-              ),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.popAndPushNamed(context, "/login");
-                },
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.deepPurpleAccent[400],
-                ),
-                child: const Text('abmelden'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

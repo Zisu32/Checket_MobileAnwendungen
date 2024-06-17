@@ -89,6 +89,7 @@ class _ScannerPageState extends State<ScannerPage> {
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.deepPurpleAccent[400],
+                        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40),
                       ),
                       child: const Text('abgeholt'),
                     ),

@@ -1,6 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:app/models/jacketModel.dart';
 import 'package:app/routes/footer_menu.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:app/provider/jacketProvider.dart';
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key});
@@ -18,29 +22,41 @@ class _ListPageState extends State<ListPage> {
     if (!status.isGranted) {
       status = await Permission.storage.request();
     }
-
     if (status.isGranted) {
       // Placeholder for download logic
-      // Assume we are simulating a file download
       setState(() {
         pdfPath = "path/to/downloaded/report.pdf";
       });
-
-      // Show a dialog or snackbar to inform the user
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Report downloaded to $pdfPath'),
-          duration: const Duration(seconds: 2),
+        const SnackBar(
+          content: Center(child: Text('Report erstellt')),
+          backgroundColor: Colors.teal,
         ),
       );
     } else {
-      // Handle the case where the user does not grant permission
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Storage permission is needed to download the report'),
-          duration: Duration(seconds: 2),
+          content: Center(child: Text('Keine Datei-Berechtigung')),
+          backgroundColor: Colors.redAccent,
         ),
       );
+    }
+  }
+
+  Future<void> importSession() async {
+
+  }
+
+  Color getStatusColor(Status status) {
+    switch (status) {
+      case Status.verfuegbar:
+        return Colors.teal;
+      case Status.abgeholt:
+        return Colors.grey;
+      case Status.verloren:
+        return Colors.redAccent;
+      default:
+        return Colors.black;
     }
   }
 
@@ -53,21 +69,88 @@ class _ListPageState extends State<ListPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              if (pdfPath != null)
-                Text('Last downloaded file: $pdfPath',
-                    style: const TextStyle(color: Colors.white)),
-              ElevatedButton.icon(
-                onPressed: downloadReport,
-                icon: const Icon(Icons.download),
-                label: const Text('Download Report'),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(50),
-                  backgroundColor: Colors.deepPurpleAccent[400],
-                  foregroundColor: Colors.white,
+              Expanded(
+                child: Consumer<JacketProvider>(
+                  builder: (context, jacketProvider, child) {
+                    return ScrollbarTheme(
+                      data: ScrollbarThemeData(
+                        thumbColor: MaterialStateProperty.all(Colors.grey[700]),
+                        thickness: MaterialStateProperty.all(3),
+                      ),
+                      child: Scrollbar(
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.only(right: 20.0),
+                          itemCount: jacketProvider.jacketList.length,
+                          itemBuilder: (context, index) {
+                            Jacket jacket = jacketProvider.jacketList[index];
+                            return Container(
+                              margin: const EdgeInsets.symmetric(vertical: 4.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[800],
+                              ),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  backgroundColor: getStatusColor(jacket.status),
+                                  radius: 10,
+                                ),
+                                title: Text(
+                                  '${jacket.jacketNumber}',
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                trailing: CircleAvatar(
+                                  backgroundColor: Colors.deepPurpleAccent[400],
+                                  child: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: downloadReport,
+                      icon: const Icon(Icons.download),
+                      label: const Text('Report'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        backgroundColor: Colors.deepPurpleAccent[400],
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: importSession,
+                      icon: const Icon(Icons.upload),
+                      label: const Text('Import'),
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        backgroundColor: Colors.deepPurpleAccent[400],
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
             ],
           ),
         ),
