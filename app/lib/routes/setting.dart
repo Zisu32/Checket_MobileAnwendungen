@@ -51,7 +51,7 @@ class SettingPageState extends State<SettingPage> {
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: Colors.white),
                 title: const Text('Kamera', style: TextStyle(color: Colors.white)),
-                onTap: () => Navigator.of(context).pop(2),  // Changed this from a const ListTile to one that can react to onTap
+                onTap: () => Navigator.of(context).pop(2),
               ),
             ],
           ),
@@ -80,7 +80,6 @@ class SettingPageState extends State<SettingPage> {
       ));
     }
   }
-
 
   Future<void> pickImageFromSource(ImageSource source) async {
     final pickedFile = await imagePickerImplementation.getImageFromSource(source: source);
