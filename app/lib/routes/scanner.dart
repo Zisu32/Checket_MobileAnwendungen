@@ -84,7 +84,7 @@ class _ScannerPageState extends State<ScannerPage> {
                               duration: Duration(seconds: 2),
                             ),
                         );
-                        controller!.resumeCamera();
+                        controller.resumeCamera();
                       },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,

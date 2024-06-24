@@ -197,12 +197,12 @@ class _ListPageState extends State<ListPage> {
                     jacketProvider.updateJacketStatus(jacket.qrString, newStatus!);
                     Navigator.of(context).pop();
                   },
-                  child: const Text('speichern'),
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size.fromHeight(50),
                     foregroundColor: Colors.white,
                     backgroundColor: Colors.deepPurpleAccent[400],
                   ),
+                  child: const Text('speichern'),
                 ),
                 TextButton(
                   onPressed: () {
