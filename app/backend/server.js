@@ -55,7 +55,7 @@ app.post('/login', async (req, res) => {
     }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: error.message }); // Corrected from `error message` to `error.message`
+      res.status(500).json({ error: error.message });
     }
 
 });
