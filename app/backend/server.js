@@ -105,8 +105,6 @@ app.put('/updateJacketStatus', async (req, res) => {
     if (!number) {
       return res.status(409).json({ message: "Status konnte nicht aktualisiert werden!" });
     }
-
-    //if (status === Status.verfuegbar)
     console.log(typeof status)
     //update Jacket Status
     try {
