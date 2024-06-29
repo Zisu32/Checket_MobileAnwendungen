@@ -138,7 +138,7 @@ class JacketProvider extends ChangeNotifier {
     var url = Uri.parse('http://10.0.2.2:3000/clear');
     var response = await http.delete(url);
     jacketList.clear();
-    jacketNumber = 0;
+    jacketNumber = 1;
     notifyListeners();
   }
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'dart:io';
+import '../provider/jacketProvider.dart';
 import 'footer_menu.dart';
 
 class SettingPage extends StatefulWidget {
@@ -134,6 +136,7 @@ class SettingPageState extends State<SettingPage> {
                 const SizedBox(height: 10),
                 TextButton(
                   onPressed: () {
+                    Provider.of<JacketProvider>(context, listen: false).clearJacktesFromDB();
                     Navigator.popAndPushNamed(context, "/login");
                   },
                   style: TextButton.styleFrom(

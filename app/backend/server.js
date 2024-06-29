@@ -124,9 +124,9 @@ app.get('/getJacketList' , async (req, res) => {
     res.status(200).json({jackets : jacketList})
 })
 
-// getDBJacketList
+// clearDBJacketList
 app.delete('/clear' , async (req, res) => {
-    const jacketList = await prisma.jacket.clear;
+    const jacketList = await prisma.jacket.deleteMany();
     res.status(200).json({jackets : jacketList})
 })
 

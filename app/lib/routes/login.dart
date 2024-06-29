@@ -23,10 +23,10 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _usernameFocusNode.addListener(() {
-      setState(() {}); // Update the UI when focus changes
+      setState(() {});
     });
     _passwordFocusNode.addListener(() {
-      setState(() {}); // Update the UI when focus changes
+      setState(() {});
     });
   }
 
@@ -42,6 +42,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> loginUser(BuildContext context) async {
     JacketProvider jacketProvider =
         Provider.of<JacketProvider>(context, listen: false);
+
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Benutzername und Passwort eintragen')),
@@ -50,6 +51,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
+    // Backend Request
     var url = Uri.parse('http://10.0.2.2:3000/login');
     var response = await http.post(
       url,
@@ -62,54 +64,60 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       bool jacketsExists = await jacketProvider.getJacktesFromDB();
-      debugPrint("jackets ex : ${jacketsExists.toString()}");
       if (jacketsExists) {
         showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                backgroundColor: Colors.grey[850],
-                content: const Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text("Daten aus Session gefunden."),
-                    SizedBox(height: 20),
-                  ],
-                ),
-                actions: [
-                  Center(
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            Navigator.popAndPushNamed(context, "/camera");},
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.deepPurpleAccent[400],
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 14.0, horizontal: 30),
-                          ),
-                          child: const Text('Daten laden'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                             Navigator.of(context).pop();
-                          Navigator.popAndPushNamed(context, "/camera");},
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.white,
-                            backgroundColor: Colors.deepPurpleAccent[400],
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 14.0, horizontal: 30),
-                          ),
-                          child: const Text('Neue Session'),
-                        ),
-                      ],
-                    ),
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: Colors.grey[850],
+              content: const Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Daten bereits vorhanden. Vorgehensweise wählen.',
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                    textAlign: TextAlign.center,
                   ),
                 ],
-              );
-            });
+              ),
+              actions: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Provider.of<JacketProvider>(context, listen: false).clearJacktesFromDB();
+                        Navigator.of(context).pop();
+                        Navigator.popAndPushNamed(context, "/camera");
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.deepPurpleAccent[400],
+                        padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 30),
+                      ),
+                      child: const Text('neue Schicht starten'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.popAndPushNamed(context, "/camera");
+                      },
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.deepPurpleAccent[400],
+                        padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 30),
+                      ),
+                      child: const Text('alte Schicht laden'),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        Navigator.popAndPushNamed(context, "/camera");
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
