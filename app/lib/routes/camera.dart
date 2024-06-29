@@ -54,7 +54,7 @@ class _CameraPageState extends State<CameraPage> {
       final XFile file = await controller!.takePicture();
       int jacketNumber = Provider.of<JacketProvider>(context, listen: false).getJacketCounter();
       String qrString = Provider.of<JacketProvider>(context, listen: false).getQrString();
-      Provider.of<JacketProvider>(context, listen: false).addJacketToList(jacketNumber, file.path);
+      Provider.of<JacketProvider>(context, listen: false).addJacketToList(context, jacketNumber, file.path);
 
       showDialog(
           context: context,

@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:app/provider/jacketProvider.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path/path.dart' as path;
+import 'package:app/utils/utils.dart' as utils;
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key});
@@ -103,17 +104,6 @@ class _ListPageState extends State<ListPage> {
     }
   }
 
-  String mapStatusToString(Status newStatus) {
-    switch (newStatus) {
-      case Status.verfuegbar:
-        return "verfuegbar";
-      case Status.abgeholt:
-        return "abgeholt";
-      case Status.verloren:
-        return "verloren";
-    }
-  }
-
   Future<pw.Document> generatePdf(List<Jacket> jacketList) async {
     final pdf = pw.Document();
     pdf.addPage(
@@ -130,7 +120,7 @@ class _ListPageState extends State<ListPage> {
                   <String>['Nummer', 'Status'],
                   ...jacketList.map((jacket) => [
                         jacket.jacketNumber.toString(),
-                        mapStatusToString(jacket.status),
+                        utils.mapStatusToString(jacket.status),
                       ]),
                 ],
               ),
@@ -217,7 +207,7 @@ class _ListPageState extends State<ListPage> {
                 ElevatedButton(
                   onPressed: () {
                     jacketProvider.updateJacketStatus(
-                        jacket.qrString, newStatus!);
+                        context, jacket.qrString, newStatus!);
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
@@ -395,8 +385,10 @@ class _ListPageState extends State<ListPage> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: () async {
-                        final jacketProvider = Provider.of<JacketProvider>(context, listen: false);
-                        final pdf = await generatePdf(jacketProvider.jacketList);
+                        final jacketProvider =
+                            Provider.of<JacketProvider>(context, listen: false);
+                        final pdf =
+                            await generatePdf(jacketProvider.jacketList);
                         downloadReport(pdf);
                       },
                       icon: const Icon(Icons.download),

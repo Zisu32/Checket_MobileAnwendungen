@@ -105,7 +105,6 @@ app.put('/updateJacketStatus', async (req, res) => {
     if (!number) {
       return res.status(409).json({ message: "Status konnte nicht aktualisiert werden!" });
     }
-    console.log(typeof status)
     //update Jacket Status
     try {
       const updateJacketStatus = await prisma.jacket.update({

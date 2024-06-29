@@ -23,7 +23,7 @@ class _ScannerPageState extends State<ScannerPage> {
   void _markJacketAsCollected() {
     if (scannedQRStringJacket != null) {
       Provider.of<JacketProvider>(context, listen: false)
-          .updateJacketStatus(scannedQRStringJacket!.qrString, Status.abgeholt);
+          .updateJacketStatus(context, scannedQRStringJacket!.qrString, Status.abgeholt);
     }
   }
 
