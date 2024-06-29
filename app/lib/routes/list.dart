@@ -1,15 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:app/models/jacketModel.dart';
 import 'package:app/routes/footer_menu.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:app/provider/jacketProvider.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path/path.dart' as path;
-import 'package:app/utils/utils.dart' as utils;
 
 class ListPage extends StatefulWidget {
   const ListPage({super.key});
@@ -19,77 +14,8 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  String? pdfPath;
   bool _showOnlyVerfuegbar = false;
   String _searchQuery = '';
-
-  Future<void> downloadReport(pw.Document document) async {
-    try {
-      var status = await Permission.manageExternalStorage.status;
-      if (!status.isGranted) {
-        status = await Permission.manageExternalStorage.request();
-      }
-      if (status.isGranted) {
-        try {
-          final Directory directory = await getApplicationDocumentsDirectory();
-          // Build pdfPath for ListExport PDF
-          Directory storageDir =
-              Directory(path.join(directory.path, 'Reports'));
-          if (!(await storageDir.exists())) {
-            await storageDir.create(recursive: true);
-          }
-          try {
-            pdfPath = path.join(
-                storageDir.path, '${DateTime.now().toString()}_report.pdf');
-            final File file = File(pdfPath!);
-            await file.writeAsBytes(await document.save());
-            debugPrint("pdfPath: ${pdfPath!}");
-
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Center(child: Text('Report erstellt')),
-              backgroundColor: Colors.teal,
-            ));
-          } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content:
-                  Center(child: Text('Fehler beim generieren des PDF-Pfads')),
-              backgroundColor: Colors.redAccent,
-            ));
-          }
-        } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content:
-                Center(child: Text('Fehler beim Erstellen des Report Ordners')),
-            backgroundColor: Colors.redAccent,
-          ));
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Center(child: Text('Keine Datei-Berechtigung')),
-          backgroundColor: Colors.redAccent,
-        ));
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Center(child: Text('Fehler beim Downloaden des Berichts')),
-        backgroundColor: Colors.redAccent,
-      ));
-    }
-  }
-
-  Future<void> importSession() async {
-    try {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Center(child: Text('importiert')),
-        backgroundColor: Colors.teal,
-      ));
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Center(child: Text('fehler')),
-        backgroundColor: Colors.redAccent,
-      ));
-    }
-  }
 
   Color mapStatusColor(Status status) {
     switch (status) {
@@ -102,34 +28,6 @@ class _ListPageState extends State<ListPage> {
       default:
         return Colors.black;
     }
-  }
-
-  Future<pw.Document> generatePdf(List<Jacket> jacketList) async {
-    final pdf = pw.Document();
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            children: [
-              pw.Text('Checket Report ${DateTime.now()}',
-                  style: const pw.TextStyle(fontSize: 24)),
-              pw.SizedBox(height: 20),
-              pw.TableHelper.fromTextArray(
-                context: context,
-                data: <List<String>>[
-                  <String>['Nummer', 'Status'],
-                  ...jacketList.map((jacket) => [
-                        jacket.jacketNumber.toString(),
-                        utils.mapStatusToString(jacket.status),
-                      ]),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
-    );
-    return pdf;
   }
 
   Future<void> showEditDialog(Jacket jacket) async {
@@ -365,31 +263,6 @@ class _ListPageState extends State<ListPage> {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        final jacketProvider =
-                            Provider.of<JacketProvider>(context, listen: false);
-                        final pdf =
-                            await generatePdf(jacketProvider.jacketList);
-                        downloadReport(pdf);
-                      },
-                      icon: const Icon(Icons.download),
-                      label: const Text('Report'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                        backgroundColor: Colors.deepPurpleAccent[400],
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 40),
             ],
           ),
         ),
