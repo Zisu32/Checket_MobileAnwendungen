@@ -30,7 +30,17 @@ class JacketProvider extends ChangeNotifier {
     for (var jacket in jacketList) {
       if (jacket.qrString == qrString) {
         jacket.status = newStatus;
-        print('Jacket updated Status: ${jacket.status}');
+
+        String status; // status for backend
+        switch (jacket.status){
+          case Status.verfuegbar :
+            status = "verfuegbar";
+          case Status.abgeholt :
+            status = "abgeholt";
+          case Status.verloren :
+            status = "verloren";
+        }
+        debugPrint('Jacket updated Status: ${jacket.status}');
         notifyListeners();
         break;
       }

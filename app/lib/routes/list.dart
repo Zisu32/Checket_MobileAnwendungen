@@ -32,12 +32,14 @@ class _ListPageState extends State<ListPage> {
         try {
           final Directory directory = await getApplicationDocumentsDirectory();
           // Build pdfPath for ListExport PDF
-          Directory storageDir = Directory(path.join(directory.path, 'Reports'));
+          Directory storageDir =
+              Directory(path.join(directory.path, 'Reports'));
           if (!(await storageDir.exists())) {
             await storageDir.create(recursive: true);
           }
           try {
-            pdfPath = path.join(storageDir.path, '${DateTime.now().toString()}_report.pdf');
+            pdfPath = path.join(
+                storageDir.path, '${DateTime.now().toString()}_report.pdf');
             final File file = File(pdfPath!);
             await file.writeAsBytes(await document.save());
             debugPrint("pdfPath: ${pdfPath!}");
@@ -48,13 +50,15 @@ class _ListPageState extends State<ListPage> {
             ));
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Center(child: Text('Fehler beim generieren des PDF-Pfads')),
+              content:
+                  Center(child: Text('Fehler beim generieren des PDF-Pfads')),
               backgroundColor: Colors.redAccent,
             ));
           }
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Center(child: Text('Fehler beim Erstellen des Report Ordners')),
+            content:
+                Center(child: Text('Fehler beim Erstellen des Report Ordners')),
             backgroundColor: Colors.redAccent,
           ));
         }
@@ -86,34 +90,7 @@ class _ListPageState extends State<ListPage> {
     }
   }
 
-  Future<pw.Document> generatePdf(List<Jacket> jacketList) async {
-    final pdf = pw.Document();
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            children: [
-              pw.Text('Checket Report ${DateTime.now()}', style: const pw.TextStyle(fontSize: 24)),
-              pw.SizedBox(height: 20),
-              pw.TableHelper.fromTextArray(
-                context: context,
-                data: <List<String>>[
-                  <String>['Nummer', 'Status'],
-                  ...jacketList.map((jacket) => [
-                    jacket.jacketNumber.toString(),
-                    jacket.status.toString(),
-                  ]),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
-    );
-    return pdf;
-  }
-
-  Color getStatusColor(Status status) {
+  Color mapStatusColor(Status status) {
     switch (status) {
       case Status.verfuegbar:
         return Colors.teal;
@@ -124,6 +101,45 @@ class _ListPageState extends State<ListPage> {
       default:
         return Colors.black;
     }
+  }
+
+  String mapStatusToString(Status newStatus) {
+    switch (newStatus) {
+      case Status.verfuegbar:
+        return "verfuegbar";
+      case Status.abgeholt:
+        return "abgeholt";
+      case Status.verloren:
+        return "verloren";
+    }
+  }
+
+  Future<pw.Document> generatePdf(List<Jacket> jacketList) async {
+    final pdf = pw.Document();
+    pdf.addPage(
+      pw.Page(
+        build: (pw.Context context) {
+          return pw.Column(
+            children: [
+              pw.Text('Checket Report ${DateTime.now()}',
+                  style: const pw.TextStyle(fontSize: 24)),
+              pw.SizedBox(height: 20),
+              pw.TableHelper.fromTextArray(
+                context: context,
+                data: <List<String>>[
+                  <String>['Nummer', 'Status'],
+                  ...jacketList.map((jacket) => [
+                        jacket.jacketNumber.toString(),
+                        mapStatusToString(jacket.status),
+                      ]),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
+    );
+    return pdf;
   }
 
   Future<void> showEditDialog(Jacket jacket) async {
@@ -151,20 +167,25 @@ class _ListPageState extends State<ListPage> {
                   SizedBox(
                       height: 300,
                       width: 250,
-                      child: Image.file(File(jacket.imagePath), fit: BoxFit.fill,)
-                  ),
+                      child: Image.file(
+                        File(jacket.imagePath),
+                        fit: BoxFit.fill,
+                      )),
                   const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CircleAvatar(
-                        backgroundColor: getStatusColor(newStatus!),
+                        backgroundColor: mapStatusColor(newStatus!),
                         radius: 10,
                       ),
                       const SizedBox(width: 10),
                       const Text(
                         'Status',
-                        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 10),
                       DropdownButton<Status>(
@@ -176,7 +197,8 @@ class _ListPageState extends State<ListPage> {
                             newStatus = newValue!;
                           });
                         },
-                        items: Status.values.map<DropdownMenuItem<Status>>((Status value) {
+                        items: Status.values
+                            .map<DropdownMenuItem<Status>>((Status value) {
                           return DropdownMenuItem<Status>(
                             value: value,
                             child: Text(value.toString().split('.').last),
@@ -194,7 +216,8 @@ class _ListPageState extends State<ListPage> {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    jacketProvider.updateJacketStatus(jacket.qrString, newStatus!);
+                    jacketProvider.updateJacketStatus(
+                        jacket.qrString, newStatus!);
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
@@ -208,7 +231,8 @@ class _ListPageState extends State<ListPage> {
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: const Text('schließen', style: TextStyle(color: Colors.deepPurpleAccent)),
+                  child: const Text('schließen',
+                      style: TextStyle(color: Colors.deepPurpleAccent)),
                 ),
                 const SizedBox(height: 10),
               ],
@@ -238,10 +262,12 @@ class _ListPageState extends State<ListPage> {
                         hintStyle: const TextStyle(color: Colors.black54),
                         filled: true,
                         fillColor: Colors.white,
-                        prefixIcon: const Icon(Icons.search, color: Colors.black54),
+                        prefixIcon:
+                            const Icon(Icons.search, color: Colors.black54),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.deepPurpleAccent, width: 2.0),
+                          borderSide: const BorderSide(
+                              color: Colors.deepPurpleAccent, width: 2.0),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -268,7 +294,8 @@ class _ListPageState extends State<ListPage> {
                       });
                     },
                     icon: const Icon(Icons.filter_list),
-                    label: Text(_showOnlyVerfuegbar ? 'Verfügbar' : '   Alle        '),
+                    label: Text(
+                        _showOnlyVerfuegbar ? 'Verfügbar' : '   Alle        '),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.deepPurpleAccent[400],
                       foregroundColor: Colors.white,
@@ -282,15 +309,16 @@ class _ListPageState extends State<ListPage> {
                   builder: (context, jacketProvider, child) {
                     var jacketList = _showOnlyVerfuegbar
                         ? jacketProvider.jacketList
-                        .where((jacket) => jacket.status == Status.verfuegbar)
-                        .toList()
+                            .where(
+                                (jacket) => jacket.status == Status.verfuegbar)
+                            .toList()
                         : jacketProvider.jacketList;
 
                     if (_searchQuery.isNotEmpty) {
                       jacketList = jacketList
                           .where((jacket) => jacket.jacketNumber
-                          .toString()
-                          .contains(_searchQuery))
+                              .toString()
+                              .contains(_searchQuery))
                           .toList();
                     }
 
@@ -313,7 +341,8 @@ class _ListPageState extends State<ListPage> {
                               ),
                               child: ListTile(
                                 leading: CircleAvatar(
-                                  backgroundColor: getStatusColor(jacket.status),
+                                  backgroundColor:
+                                      mapStatusColor(jacket.status),
                                   radius: 10,
                                 ),
                                 title: Text(
@@ -328,7 +357,8 @@ class _ListPageState extends State<ListPage> {
                                     showEditDialog(jacket);
                                   },
                                   child: CircleAvatar(
-                                    backgroundColor: Colors.deepPurpleAccent[400],
+                                    backgroundColor:
+                                        Colors.deepPurpleAccent[400],
                                     child: const Icon(
                                       Icons.edit,
                                       color: Colors.white,
