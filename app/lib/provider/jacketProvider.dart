@@ -95,4 +95,50 @@ class JacketProvider extends ChangeNotifier {
         'Jacket added: Number: ${jacket.jacketNumber}, Status: ${jacket.status}, Image Path: ${jacket.imagePath}');
     notifyListeners();
   }
+
+  Status mapStringtoStatus(String status) {
+    switch (status) {
+      case "verfuegbar" :
+        return Status.verfuegbar;
+      case "abgeholt" :
+        return Status.abgeholt;
+      case "verloren" :
+        return Status.verloren;
+      default :
+        return Status.verfuegbar;
+    }
+
+  }
+
+  Future<bool> getJacktesFromDB() async {
+    var url = Uri.parse('http://10.0.2.2:3000/getJacketList');
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      final List<dynamic> list = jsonDecode(response.body)["jackets"];
+      if (list.isEmpty){
+        return false;
+      }
+      for (int i = 0; i < list.length; i++) {
+        int jacketNumber = list[i]["jacketNumber"];
+        String qrString = list[i]["qrString"];
+        String imagePath = list[i]["imagePath"];
+        Status status = mapStringtoStatus(list[i]["status"]);
+        //Build the jacketObject out of the get-Values
+        Jacket jacket = Jacket(jacketNumber: jacketNumber, status: status, imagePath: imagePath, qrString: qrString);
+        jacketList.add(jacket);
+      }
+      jacketNumber = list.last["jacketNumber"];
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> clearJacktesFromDB() async {
+    var url = Uri.parse('http://10.0.2.2:3000/clear');
+    var response = await http.delete(url);
+    jacketList.clear();
+    jacketNumber = 0;
+    notifyListeners();
+  }
 }

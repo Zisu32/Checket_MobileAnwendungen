@@ -371,19 +371,6 @@ class _ListPageState extends State<ListPage> {
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: importSession,
-                      icon: const Icon(Icons.upload),
-                      label: const Text('Import'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                        backgroundColor: Colors.deepPurpleAccent[400],
-                        foregroundColor: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 20),
-                  Expanded(
-                    child: ElevatedButton.icon(
                       onPressed: () async {
                         final jacketProvider =
                             Provider.of<JacketProvider>(context, listen: false);

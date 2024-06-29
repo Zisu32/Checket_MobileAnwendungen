@@ -118,6 +118,18 @@ app.put('/updateJacketStatus', async (req, res) => {
     }
   });
 
+// getDBJacketList
+app.get('/getJacketList' , async (req, res) => {
+    const jacketList = await prisma.jacket.findMany();
+    res.status(200).json({jackets : jacketList})
+})
+
+// getDBJacketList
+app.delete('/clear' , async (req, res) => {
+    const jacketList = await prisma.jacket.clear;
+    res.status(200).json({jackets : jacketList})
+})
+
 // Server running port
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

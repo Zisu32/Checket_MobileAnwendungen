@@ -1,6 +1,8 @@
+import 'package:app/provider/jacketProvider.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,6 +40,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> loginUser(BuildContext context) async {
+    JacketProvider jacketProvider =
+        Provider.of<JacketProvider>(context, listen: false);
     if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Benutzername und Passwort eintragen')),
@@ -57,8 +61,56 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     if (response.statusCode == 200) {
-      // Counter should start at 0 when coming from the login
-      Navigator.popAndPushNamed(context, "/camera", arguments: 0);
+      bool jacketsExists = await jacketProvider.getJacktesFromDB();
+      debugPrint("jackets ex : ${jacketsExists.toString()}");
+      if (jacketsExists) {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                backgroundColor: Colors.grey[850],
+                content: const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text("Daten aus Session gefunden."),
+                    SizedBox(height: 20),
+                  ],
+                ),
+                actions: [
+                  Center(
+                    child: Row(
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            Navigator.popAndPushNamed(context, "/camera");},
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.deepPurpleAccent[400],
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14.0, horizontal: 30),
+                          ),
+                          child: const Text('Daten laden'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                             Navigator.of(context).pop();
+                          Navigator.popAndPushNamed(context, "/camera");},
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.deepPurpleAccent[400],
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 14.0, horizontal: 30),
+                          ),
+                          child: const Text('Neue Session'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            });
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Logindaten prüfen')),
@@ -81,7 +133,8 @@ class _LoginPageState extends State<LoginPage> {
             height: 350,
             child: snapshot.hasData && File(snapshot.data!).existsSync()
                 ? Image.file(File(snapshot.data!), fit: BoxFit.cover)
-                : const Placeholder(fallbackHeight: 300, fallbackWidth: double.infinity));
+                : const Placeholder(
+                    fallbackHeight: 300, fallbackWidth: double.infinity));
         return Scaffold(
           backgroundColor: Colors.grey[850],
           resizeToAvoidBottomInset: true,
@@ -103,13 +156,16 @@ class _LoginPageState extends State<LoginPage> {
                         filled: true,
                         prefixIcon: Icon(
                           Icons.person,
-                          color: _usernameFocusNode.hasFocus ? Colors.deepPurpleAccent[400] : Colors.grey[700],
+                          color: _usernameFocusNode.hasFocus
+                              ? Colors.deepPurpleAccent[400]
+                              : Colors.grey[700],
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(0.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurpleAccent[400]!, width: 2.0),
+                          borderSide: BorderSide(
+                              color: Colors.deepPurpleAccent[400]!, width: 2.0),
                         ),
                       ),
                     ),
@@ -124,13 +180,16 @@ class _LoginPageState extends State<LoginPage> {
                         filled: true,
                         prefixIcon: Icon(
                           Icons.lock,
-                          color: _passwordFocusNode.hasFocus ? Colors.deepPurpleAccent[400] : Colors.grey[700],
+                          color: _passwordFocusNode.hasFocus
+                              ? Colors.deepPurpleAccent[400]
+                              : Colors.grey[700],
                         ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(0.0),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.deepPurpleAccent[400]!, width: 2.0),
+                          borderSide: BorderSide(
+                              color: Colors.deepPurpleAccent[400]!, width: 2.0),
                         ),
                       ),
                     ),
