@@ -16,6 +16,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final FocusNode _usernameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _repeatPasswordFocusNode = FocusNode();
+  final String ip = "192.168.178.56";
+  //final String ip = "10.0.2.2";
 
   @override
   void initState() {
@@ -45,7 +47,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       return;
     }
 
-    var url = Uri.parse('http://10.0.2.2:3000/registration');
+    String uri = 'http://${ip}:3000/registration';
+    var url = Uri.parse(uri);
     var response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},

@@ -13,11 +13,16 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+
+
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FocusNode _usernameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
+
+  final String ip = "192.168.178.56";
+  //final String ip = "10.0.2.2";
 
   @override
   void initState() {
@@ -52,7 +57,8 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // Backend Request
-    var url = Uri.parse('http://10.0.2.2:3000/login');
+    String uri = 'http://${ip}:3000/login';
+    var url = Uri.parse(uri);
     var response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
