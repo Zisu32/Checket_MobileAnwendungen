@@ -179,11 +179,11 @@ class SettingPageState extends State<SettingPage> {
     }
   }
 
-  Future<void> downloadReport(pw.Document document) async {
-
+  Future<bool> downloadReport(pw.Document document) async {
+    bool storagePermission = await requestStoragePermission();
     try {
 
-      if (await requestStoragePermission()) {
+      if (storagePermission) {
         //final Directory directory = await getApplicationDocumentsDirectory();
         final Directory? directory = await getExternalStorageDirectory();
         if (directory != null) {
@@ -205,11 +205,13 @@ class SettingPageState extends State<SettingPage> {
             content: Center(child: Text('Report erstellt')),
             backgroundColor: Colors.teal,
           ));
+          return true;
         } else {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
             content: Center(child: Text('Keine Datei-Berechtigung')),
             backgroundColor: Colors.redAccent,
           ));
+          return false;
         }
       }
       else {
@@ -217,12 +219,14 @@ class SettingPageState extends State<SettingPage> {
           content: Center(child: Text('Kein gültiger Pfad')),
           backgroundColor: Colors.redAccent,
         ));
+        return false;
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Fehler beim Downloaden des Berichts')),
         backgroundColor: Colors.redAccent,
       ));
+      return false;
     }
   }
 
@@ -286,7 +290,7 @@ class SettingPageState extends State<SettingPage> {
                       final jacketProvider =
                           Provider.of<JacketProvider>(context, listen: false);
                       final pdf = await generatePdf(jacketProvider.jacketList);
-                      await downloadReport(pdf);
+                      bool reportCreated = await downloadReport(pdf);
                       jacketProvider.clearJacktesFromDB();
                       Navigator.popAndPushNamed(context, "/login");
                     },
