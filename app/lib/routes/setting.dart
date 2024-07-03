@@ -73,12 +73,36 @@ class SettingPageState extends State<SettingPage> {
         0; // Handling null (when the user taps outside the bottom sheet)
   }
 
-  Future<void> pickImage(BuildContext context) async {
-    var status = await Permission.photos.status;
-    if (!status.isGranted) {
-      status = await Permission.photos.request();
+
+  Future<bool> requestGaleryPermission() async {
+    int sdkVersion = await getSdkVersion();
+
+    if (sdkVersion >= 30) {
+      // For Android SDK 30 and above, use MANAGE_EXTERNAL_STORAGE
+      if (await Permission.photos.request().isGranted) {
+        debugPrint("Permission granted for MANAGE_EXTERNAL_STORAGE");
+        return true;
+      } else {
+        debugPrint("Permission denied for MANAGE_EXTERNAL_STORAGE");
+        return false;
+      }
+    } else {
+      // For Android SDK below 30, use WRITE_EXTERNAL_STORAGE
+      if (await Permission.storage.request().isGranted) {
+        debugPrint("Permission granted for STORAGE");
+        return true;
+      } else {
+        debugPrint("Permission denied for STORAGE");
+        return false;
+      }
     }
-    if (status.isGranted && !isPickerActive) {
+  }
+
+
+  Future<void> pickImage(BuildContext context) async {
+    bool galleryPermission = await requestGaleryPermission();
+
+    if (galleryPermission && !isPickerActive) {
       isPickerActive = true;
       int source = await showOptions();
       if (source != 0) {
