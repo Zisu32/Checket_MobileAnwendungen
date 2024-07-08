@@ -187,13 +187,8 @@ class SettingPageState extends State<SettingPage> {
         //final Directory directory = await getApplicationDocumentsDirectory();
         final Directory? directory = await getExternalStorageDirectory();
         if (directory != null) {
-          debugPrint("directory: ${directory}");
           Directory storageDir = Directory(
               path.join(directory.path, 'Reports'));
-          debugPrint("directory: ${storageDir}");
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Center(child: Text(storageDir.toString())),
-              backgroundColor: Colors.redAccent));
           if (!(await storageDir.exists())) {
             await storageDir.create(recursive: true);
           }
