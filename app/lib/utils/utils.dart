@@ -17,7 +17,7 @@ String getIpAddress()
 {
   //final String ip = "192.168.178.56";
   //final String ip = "192.168.0.211";
-  final String ip = "192.168.56.1";
-  //final String ip = "10.0.2.2";
+  //final String ip = "192.168.56.1";
+  final String ip = "10.0.2.2";
   return ip;
 }
