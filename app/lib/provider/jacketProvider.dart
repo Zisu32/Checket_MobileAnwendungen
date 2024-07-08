@@ -9,8 +9,7 @@ class JacketProvider extends ChangeNotifier {
   int jacketNumber = 1;
   List<Jacket> jacketList = [];
   late String qrString;
-  final String ip = "192.168.178.56";
-  //final String ip = "10.0.2.2";
+  final String ip = utils.getIpAddress();
 
   int getJacketCounter() {
     int counter = jacketNumber;

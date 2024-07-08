@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:app/utils/utils.dart' as utils;
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({super.key});
@@ -16,8 +17,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final FocusNode _usernameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final FocusNode _repeatPasswordFocusNode = FocusNode();
-  final String ip = "192.168.178.56";
-  //final String ip = "10.0.2.2";
+  final String ip = utils.getIpAddress();
 
   @override
   void initState() {

@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app/utils/utils.dart' as utils;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,8 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode _usernameFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
 
-  final String ip = "192.168.178.56";
-  //final String ip = "10.0.2.2";
+  final String ip = utils.getIpAddress();
 
   @override
   void initState() {

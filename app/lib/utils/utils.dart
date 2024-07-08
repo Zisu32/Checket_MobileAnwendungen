@@ -12,3 +12,11 @@ String mapStatusToString(Status newStatus) {
       return "verfuegbar";
   }
 }
+
+String getIpAddress()
+{
+  //final String ip = "192.168.178.56";
+  final String ip = "192.168.0.211";
+  //final String ip = "10.0.2.2";
+  return ip;
+}
