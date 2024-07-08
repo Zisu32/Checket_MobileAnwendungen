@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -72,12 +73,36 @@ class SettingPageState extends State<SettingPage> {
         0; // Handling null (when the user taps outside the bottom sheet)
   }
 
-  Future<void> pickImage(BuildContext context) async {
-    var status = await Permission.photos.status;
-    if (!status.isGranted) {
-      status = await Permission.photos.request();
+
+  Future<bool> requestGaleryPermission() async {
+    int sdkVersion = await getSdkVersion();
+
+    if (sdkVersion >= 30) {
+      // For Android SDK 30 and above, use MANAGE_EXTERNAL_STORAGE
+      if (await Permission.photos.request().isGranted) {
+        debugPrint("Permission granted for MANAGE_EXTERNAL_STORAGE");
+        return true;
+      } else {
+        debugPrint("Permission denied for MANAGE_EXTERNAL_STORAGE");
+        return false;
+      }
+    } else {
+      // For Android SDK below 30, use WRITE_EXTERNAL_STORAGE
+      if (await Permission.storage.request().isGranted) {
+        debugPrint("Permission granted for STORAGE");
+        return true;
+      } else {
+        debugPrint("Permission denied for STORAGE");
+        return false;
+      }
     }
-    if (status.isGranted && !isPickerActive) {
+  }
+
+
+  Future<void> pickImage(BuildContext context) async {
+    bool galleryPermission = await requestGaleryPermission();
+
+    if (galleryPermission && !isPickerActive) {
       isPickerActive = true;
       int source = await showOptions();
       if (source != 0) {
@@ -114,37 +139,94 @@ class SettingPageState extends State<SettingPage> {
     }
   }
 
-  Future<void> downloadReport(pw.Document document) async {
-    try {
-      var status = await Permission.manageExternalStorage.status;
-      if (!status.isGranted) {
-        status = await Permission.manageExternalStorage.request();
-      }
-      if (status.isGranted) {
-        final Directory directory = await getApplicationDocumentsDirectory();
-        Directory storageDir = Directory(path.join(directory.path, 'Reports'));
-        if (!(await storageDir.exists())) {
-          await storageDir.create(recursive: true);
+
+  Future<int> getSdkVersion() async {
+    if (Platform.isAndroid) {
+      var androidInfo = await DeviceInfoPlugin().androidInfo;
+      int sdk = await  androidInfo.version.sdkInt!;
+      if (sdk != null)
+        {
+          return sdk;
         }
-        pdfPath = path.join(
-            storageDir.path, '${DateTime.now().toString()}_report.pdf');
-        final File file = File(pdfPath!);
-        await file.writeAsBytes(await document.save());
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Center(child: Text('Report erstellt')),
-          backgroundColor: Colors.teal,
-        ));
+      return 0;
+
+    } else {
+      return 0;
+    }
+  }
+
+  Future<bool> requestStoragePermission() async {
+    int sdkVersion = await getSdkVersion();
+
+    if (sdkVersion >= 30) {
+      // For Android SDK 30 and above, use MANAGE_EXTERNAL_STORAGE
+      if (await Permission.manageExternalStorage.request().isGranted) {
+        debugPrint("Permission granted for MANAGE_EXTERNAL_STORAGE");
+        return true;
       } else {
+        debugPrint("Permission denied for MANAGE_EXTERNAL_STORAGE");
+        return false;
+      }
+    } else {
+      // For Android SDK below 30, use WRITE_EXTERNAL_STORAGE
+      if (await Permission.storage.request().isGranted) {
+        debugPrint("Permission granted for STORAGE");
+        return true;
+      } else {
+        debugPrint("Permission denied for STORAGE");
+        return false;
+      }
+    }
+  }
+
+  Future<bool> downloadReport(pw.Document document) async {
+    bool storagePermission = await requestStoragePermission();
+    try {
+
+      if (storagePermission) {
+        //final Directory directory = await getApplicationDocumentsDirectory();
+        final Directory? directory = await getExternalStorageDirectory();
+        if (directory != null) {
+          debugPrint("directory: ${directory}");
+          Directory storageDir = Directory(
+              path.join(directory.path, 'Reports'));
+          debugPrint("directory: ${storageDir}");
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Center(child: Text(storageDir.toString())),
+              backgroundColor: Colors.redAccent));
+          if (!(await storageDir.exists())) {
+            await storageDir.create(recursive: true);
+          }
+          pdfPath = path.join(
+              storageDir.path, '${DateTime.now().toString()}_report.pdf');
+          final File file = File(pdfPath!);
+          await file.writeAsBytes(await document.save());
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Center(child: Text('Report erstellt')),
+            backgroundColor: Colors.teal,
+          ));
+          return true;
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Center(child: Text('Keine Datei-Berechtigung')),
+            backgroundColor: Colors.redAccent,
+          ));
+          return false;
+        }
+      }
+      else {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Center(child: Text('Keine Datei-Berechtigung')),
+          content: Center(child: Text('Kein gültiger Pfad')),
           backgroundColor: Colors.redAccent,
         ));
+        return false;
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Center(child: Text('Fehler beim Downloaden des Berichts')),
         backgroundColor: Colors.redAccent,
       ));
+      return false;
     }
   }
 
@@ -208,7 +290,7 @@ class SettingPageState extends State<SettingPage> {
                       final jacketProvider =
                           Provider.of<JacketProvider>(context, listen: false);
                       final pdf = await generatePdf(jacketProvider.jacketList);
-                      await downloadReport(pdf);
+                      bool reportCreated = await downloadReport(pdf);
                       jacketProvider.clearJacktesFromDB();
                       Navigator.popAndPushNamed(context, "/login");
                     },

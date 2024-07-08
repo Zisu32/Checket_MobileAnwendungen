@@ -9,6 +9,8 @@ class JacketProvider extends ChangeNotifier {
   int jacketNumber = 1;
   List<Jacket> jacketList = [];
   late String qrString;
+  final String ip = "192.168.178.56";
+  //final String ip = "10.0.2.2";
 
   int getJacketCounter() {
     int counter = jacketNumber;
@@ -37,7 +39,8 @@ class JacketProvider extends ChangeNotifier {
         utils.mapStatusToString(jacket.status);
         String status = utils.mapStatusToString(newStatus);
         //Build Request for backend
-        var url = Uri.parse('http://10.0.2.2:3000/updateJacketStatus');
+        String uri = 'http://${ip}:3000/updateJacketStatus';
+        var url = Uri.parse(uri);
         var response = await http.put(
           url,
           headers: {'Content-Type': 'application/json'},
@@ -73,7 +76,8 @@ class JacketProvider extends ChangeNotifier {
         qrString: qrString);
     jacketList.add(jacket);
     //Build Request for backend
-    var url = Uri.parse('http://10.0.2.2:3000/createJacket');
+    String uri = 'http://${ip}:3000/createJacket';
+    var url = Uri.parse(uri);
     var response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
@@ -111,7 +115,8 @@ class JacketProvider extends ChangeNotifier {
   }
 
   Future<bool> getJacktesFromDB() async {
-    var url = Uri.parse('http://10.0.2.2:3000/getJacketList');
+    String uri = 'http://${ip}:3000/getJacketList';
+    var url = Uri.parse(uri);
     var response = await http.get(url);
     if (response.statusCode == 200) {
       final List<dynamic> list = jsonDecode(response.body)["jackets"];
@@ -135,7 +140,8 @@ class JacketProvider extends ChangeNotifier {
   }
 
   Future<void> clearJacktesFromDB() async {
-    var url = Uri.parse('http://10.0.2.2:3000/clear');
+    String uri = 'http://${ip}:3000/clear';
+    var url = Uri.parse(uri);
     var response = await http.delete(url);
     jacketList.clear();
     jacketNumber = 1;
