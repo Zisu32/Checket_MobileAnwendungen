@@ -98,7 +98,7 @@ The reports generated when you log out can be found in the following paths:
   ```sh
   /storage/emulated/0/Android/data/com.example.app/files/Reports
   ```
-- For Own Device:
+- Physical Device:
   ```sh
   Android/data/com.example.app/files/Reports
   ```
