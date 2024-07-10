@@ -56,7 +56,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   style: const TextStyle(
                     color: Colors.deepPurpleAccent,
                     fontWeight: FontWeight.bold,
-                    fontSize: 100,
+                    fontSize: 64,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -64,8 +64,8 @@ class _ScannerPageState extends State<ScannerPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
-                      height: 300,
-                      width: 250,
+                      height: 200,
+                      width: 200,
                       child: Image.file(File(scannedQRStringJacket!.imagePath), fit: BoxFit.fill),
                     ),
                     const SizedBox(height: 15),

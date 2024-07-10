@@ -37,7 +37,7 @@ class JacketProvider extends ChangeNotifier {
         jacket.status = newStatus;
         utils.mapStatusToString(jacket.status);
         String status = utils.mapStatusToString(newStatus);
-        //Build Request for backend
+        //Build Request for server
         String uri = 'http://${ip}:3000/updateJacketStatus';
         var url = Uri.parse(uri);
         var response = await http.put(
@@ -74,7 +74,7 @@ class JacketProvider extends ChangeNotifier {
         imagePath: imagePath,
         qrString: qrString);
     jacketList.add(jacket);
-    //Build Request for backend
+    //Build Request for server
     String uri = 'http://${ip}:3000/createJacket';
     var url = Uri.parse(uri);
     var response = await http.post(

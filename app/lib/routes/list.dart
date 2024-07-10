@@ -47,17 +47,17 @@ class _ListPageState extends State<ListPage> {
                     '${jacket.jacketNumber}',
                     style: const TextStyle(
                       color: Colors.deepPurpleAccent,
-                      fontSize: 100,
+                      fontSize: 64,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
-                      height: 300,
-                      width: 250,
+                      height: 200,
+                      width: 200,
                       child: Image.file(
                         File(jacket.imagePath),
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                       )),
                   const SizedBox(height: 20),
                   Row(

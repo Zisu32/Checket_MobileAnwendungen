@@ -68,14 +68,14 @@ class _CameraPageState extends State<CameraPage> {
                     jacketNumber.toString(),
                     style: const TextStyle(
                       color: Colors.deepPurpleAccent,
-                      fontSize: 100,
+                      fontSize: 64,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
-                    width: 250,
-                    height: 250,
+                    width: 200,
+                    height: 200,
                     child: QrImageView(
                       data: qrString,
                       version: QrVersions.auto,

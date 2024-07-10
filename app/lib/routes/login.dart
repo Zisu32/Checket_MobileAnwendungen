@@ -144,11 +144,11 @@ class _LoginPageState extends State<LoginPage> {
       future: getSavedImagePath(),
       builder: (context, snapshot) {
         Widget imageWidget = SizedBox(
-            height: 350,
+            height: 250,
             child: snapshot.hasData && File(snapshot.data!).existsSync()
                 ? Image.file(File(snapshot.data!), fit: BoxFit.cover)
                 : const Placeholder(
-                    fallbackHeight: 300, fallbackWidth: double.infinity));
+                    fallbackHeight: 250, fallbackWidth: double.infinity));
         return Scaffold(
           backgroundColor: Colors.grey[850],
           resizeToAvoidBottomInset: true,

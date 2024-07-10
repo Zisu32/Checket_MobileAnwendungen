@@ -327,7 +327,7 @@ class SettingPageState extends State<SettingPage> {
                 if (imagePath != null)
                   Image.file(
                     File(imagePath!),
-                    height: 350,
+                    height: 250,
                     fit: BoxFit.cover,
                   ),
                 const SizedBox(height: 20),
