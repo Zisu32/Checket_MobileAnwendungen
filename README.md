@@ -60,7 +60,8 @@ Follow the instructions on the [Flutter get started page](https://docs.flutter.d
 
 1. Choose a virtual device under Device Manager and create it.
 2. Start the virtual device.
-3. Select the virtual device in the run configurations as well as the `main.dart` file.
+3. Select the virtual device in the run configurations as well as the `main.dart` file 
+located at `/app/lib/main.dart`.
 
    ![IMG1.PNG](app/assets/img/Readme/IMG1.PNG)
 

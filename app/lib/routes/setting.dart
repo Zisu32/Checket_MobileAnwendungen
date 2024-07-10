@@ -327,7 +327,7 @@ class SettingPageState extends State<SettingPage> {
                   Image.file(
                     File(imagePath!),
                     height: 250,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ),
                 const SizedBox(height: 20),
                 ElevatedButton.icon(

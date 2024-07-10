@@ -53,11 +53,10 @@ class _ListPageState extends State<ListPage> {
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
-                      height: 200,
-                      width: 200,
+                      height: 250,
                       child: Image.file(
                         File(jacket.imagePath),
-                        fit: BoxFit.cover,
+                        fit: BoxFit.fill,
                       )),
                   const SizedBox(height: 20),
                   Row(

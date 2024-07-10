@@ -64,8 +64,7 @@ class _ScannerPageState extends State<ScannerPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
-                      height: 200,
-                      width: 200,
+                      height: 250,
                       child: Image.file(File(scannedQRStringJacket!.imagePath), fit: BoxFit.fill),
                     ),
                     const SizedBox(height: 15),

@@ -74,13 +74,12 @@ class _CameraPageState extends State<CameraPage> {
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
-                    width: 200,
-                    height: 200,
+                    width: 250,
+                    height: 250,
                     child: QrImageView(
                       data: qrString,
                       version: QrVersions.auto,
                       backgroundColor: Colors.white,
-                      size: 200.0,
                       gapless: false,
                       errorStateBuilder: (cxt, err) {
                         return const Center(
