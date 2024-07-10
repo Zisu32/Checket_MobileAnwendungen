@@ -131,7 +131,7 @@ class JacketProvider extends ChangeNotifier {
         Jacket jacket = Jacket(jacketNumber: jacketNumber, status: status, imagePath: imagePath, qrString: qrString);
         jacketList.add(jacket);
       }
-      jacketNumber = list.last["jacketNumber"];
+      jacketNumber = list.last["jacketNumber"] + 1;
       notifyListeners();
       return true;
     }
