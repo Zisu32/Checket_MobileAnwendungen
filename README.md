@@ -64,10 +64,10 @@ Follow the instructions on the [Flutter get started page](https://docs.flutter.d
 
 Check the ip-address in `utils.dart` file located at `/app/lib/utils/utils.dart`. Change it to your 
 own ip-address if necessary under `// Default Emulator` for Android Studio Emulator or at 
-`// Your own Device` for your own device.
+`// Physical Device` for your own device.
    ```dart
    // final String ip = "10.0.2.2"; // Default Emulator
-   final String ip = "192.168.0.71"; // Your own Device
+   final String ip = "192.168.0.71"; // Physical Device
    ```
 
 ### 2.1 Android Studio Emulator
@@ -82,11 +82,11 @@ located at `/app/lib/main.dart`.
 4.Register a new user with the registration form and then log in with those credentials.
 5.Have fun with the app!
 
-### 2.2 On Own Device
+### 2.2 Physical Device
 
 1. Connect your Phone to the PC and enable USB-Debugging in the Developer Tools on your Phone.
 2. Select physical device under Device Manager - Your connected phone should show up there
-3. Change the IP address to the IP address of your own device and comment out the default emulation IP address
+3. Change the IP address to the IP address of your physical device and comment out the default emulator IP address
 4. Remember to change it back when using the Android Studio Emulator!
 5. Have fun with the app!
 
