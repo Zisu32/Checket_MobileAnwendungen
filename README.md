@@ -34,7 +34,7 @@ Follow the instructions on the [Flutter get started page](https://docs.flutter.d
 
 1. Download Postgres for your OS (PostgreSQL Version 16.3 recommended).
 2. [Here is the link to the installer](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads).
-3. Follow the installation guide and complete it.
+3. Follow the installation guide and complete it. Be aware that pgAdmin4 is checked at installation process.
 4. Remember your credentials for pgAdmin4.
 5. Open pgAdmin4 and create a new database called `checket`.
 
@@ -42,7 +42,7 @@ Follow the instructions on the [Flutter get started page](https://docs.flutter.d
 
 6. Use the command line to navigate to the prisma directory:
    ```sh
-   cd /server/prisma
+   cd prisma
    ```
 7. Map your data model to the database schema using the Prisma migrate CLI commands:
    ```sh
@@ -54,30 +54,41 @@ Follow the instructions on the [Flutter get started page](https://docs.flutter.d
 
 9. If all tables are there, you're good to go!
 
+10. change the directory to server and start the node server with the following command:
+  ```sh
+  cd ..
+  node server.js
+  ```
+
 ## 2. Start the App
+
+Check the ip-address in `utils.dart` file located at `/app/lib/utils/utils.dart`. Change it to your 
+own ip-address if necessary under `// Default Emulator` for Android Studio Emulator or at 
+`// Your own Device` for your own device.
+   ```dart
+   // final String ip = "10.0.2.2"; // Default Emulator
+   final String ip = "192.168.0.71"; // Your own Device
+   ```
 
 ### 2.1 Android Studio Emulator
 
-1. Choose a virtual device under Device Manager and create it.
+1. Choose a virtual device under Device Manager and create a new one.
 2. Start the virtual device.
 3. Select the virtual device in the run configurations as well as the `main.dart` file 
 located at `/app/lib/main.dart`.
 
    ![IMG1.PNG](app/assets/img/Readme/IMG1.PNG)
 
-4. Register a new user with the registration form and then log in with those credentials.
-5. Have fun with the app!
+4.Register a new user with the registration form and then log in with those credentials.
+5.Have fun with the app!
 
 ### 2.2 On Own Device
 
-1. Open the `utils.dart` file located at `/app/lib/utils/utils.dart`.
-2. Change the IP address to the IP address of your own device and comment out the default emulation IP address:
-   ```dart
-   // final String ip = "10.0.2.2"; // Default Emulator 
-   final String ip = "192.168.0.71"; // Your own Device
-   ```
-3. Remember to change it back when using the Android Studio Emulator!
-4. Have fun with the app!
+1. Connect your Phone to the PC and enable USB-Debugging in the Developer Tools on your Phone.
+2. Select physical device under Device Manager - Your connected phone should show up there
+3. Change the IP address to the IP address of your own device and comment out the default emulation IP address
+4. Remember to change it back when using the Android Studio Emulator!
+5. Have fun with the app!
 
 ## 3. Reports
 
