@@ -184,7 +184,6 @@ class SettingPageState extends State<SettingPage> {
     try {
 
       if (storagePermission) {
-        //final Directory directory = await getApplicationDocumentsDirectory();
         final Directory? directory = await getExternalStorageDirectory();
         if (directory != null) {
           Directory storageDir = Directory(
