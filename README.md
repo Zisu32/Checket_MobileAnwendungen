@@ -79,8 +79,8 @@ located at `/app/lib/main.dart`.
 
    ![IMG1.PNG](app/assets/img/Readme/IMG1.PNG)
 
-4.Register a new user with the registration form and then log in with those credentials.
-5.Have fun with the app!
+4. Register a new user with the registration form and then log in with those credentials.
+5. Have fun with the app!
 
 ### 2.2 Physical Device
 
