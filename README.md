@@ -8,7 +8,7 @@
    - [Postgres with Prisma](#13-postgres-with-prisma)
 2. [Start the App](#2-start-the-app)
    - [Android Studio Emulator](#21-androidstudio-emulator)
-   - [On Own Device](#22-on-own-device)
+   - [Physical Device](#22-physical-device)
 3. [Reports](#3-reports)
 
 ## 1. Installation
